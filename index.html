@@ -11,13 +11,46 @@
 <script src="js/d3.v4.min.js"></script>
 <script>
 console.log("hello");
-rgb_distribution = {};
+colors = {};
 
+/*
 d3.csv("data/onlyrgb.csv",function(d){
-    num_ids = Object.keys(d).length;
-    for(var i = 0; i < num_ids; i++){
-        rgb_distribution[i] = {};
+    csv = d;
+    num_ids = Object.keys(d).length - 1;
+    var num_entries = Object.keys(d[0]).length;
+    for(var i = 0; i < num_ids - 1; i++){
+        colors[i] = {};
+        var keys = Object.keys(d[i]);
+        for(var j = 0; j < num_entries; j++){
+            var letter = String.fromCharCode(Math.floor(j / 3) + "A".charCodeAt(0));
+            if(colors[i][letter] == null)
+                colors[i][letter] = {};
+            if(j % 3 == 0){ // R
+                colors[i][letter]["R"] = parseFloat(keys[j]);
+            }else if(j % 3 == 1){ // G
+                colors[i][letter]["G"] = parseFloat(keys[j]);
+            }else{ // B
+                colors[i][letter]["B"] = parseFloat(keys[j]);
+            }
+            
+        }
     }
+    
+    var colors_string = JSON.stringify(colors)
+        blob = new Blob([colors_string], { type: 'text/plain' }),
+        anchor = document.createElement('a');
+
+    anchor.download = "hello.txt";
+    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+    anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
+    anchor.click();
+
+});
+*/
+
+$.getJSON("data/synesthesia.json", function(json) {
+    data = json;
+    console.log(data);
 });
 
 
