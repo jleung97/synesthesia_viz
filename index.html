@@ -6,52 +6,117 @@
 
 </style>
 <h1></h1></br>
-<svg width="900" height="600"></svg>
+<svg width="900" height="900"></svg>
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
+<script lang="javascript" src="data/synesthesia.js"></script>
 <script>
-console.log("hello");
-colors = {};
+
+// Transforms a CSV file to a plain text file
+// Don't call this unless you want to process a csv file
+function processCSVFile(){
+    colors = [];
+    csv_file = "data/onlyrgb.csv";
+    d3.csv(csv_file,function(d){
+        csv = d;
+        num_ids = Object.keys(d).length - 1;
+        var num_entries = Object.keys(d[0]).length;
+        for(var i = 0; i < num_ids - 1; i++){
+            colors[i] = [];
+            keys = Object.keys(d[i]);
+            for(var j = 0; j < num_entries; j++){
+                //var letter = String.fromCharCode(Math.floor(j / 3) + "A".charCodeAt(0));c
+                var letter = Math.floor(j/3);
+                if(colors[i][letter] == null)
+                    colors[i][letter] = {};
+                if(j % 3 == 0){ // R
+                    colors[i][letter]["R"] = parseFloat(csv[i][keys[j]]);
+                }else if(j % 3 == 1){ // G
+                    colors[i][letter]["G"] = parseFloat(csv[i][keys[j]]);
+                }else{ // B
+                    colors[i][letter]["B"] = parseFloat(csv[i][keys[j]]);
+                }
+                
+            }
+        }
+        
+        colors_string = JSON.stringify(colors)
+            blob = new Blob([colors_string], { type: 'text/plain' }),
+            anchor = document.createElement('a');
+
+        anchor.download = "output.txt";
+        anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
+        anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
+        anchor.click();
+
+    });
+}
+//http://bl.ocks.org/srosenthal/2770072
+//https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
+data = colorData;
+num_ids = data.length;
+num_letters = 26;
+
 
 /*
-d3.csv("data/onlyrgb.csv",function(d){
-    csv = d;
-    num_ids = Object.keys(d).length - 1;
-    var num_entries = Object.keys(d[0]).length;
-    for(var i = 0; i < num_ids - 1; i++){
-        colors[i] = {};
-        var keys = Object.keys(d[i]);
-        for(var j = 0; j < num_entries; j++){
-            var letter = String.fromCharCode(Math.floor(j / 3) + "A".charCodeAt(0));
-            if(colors[i][letter] == null)
-                colors[i][letter] = {};
-            if(j % 3 == 0){ // R
-                colors[i][letter]["R"] = parseFloat(keys[j]);
-            }else if(j % 3 == 1){ // G
-                colors[i][letter]["G"] = parseFloat(keys[j]);
-            }else{ // B
-                colors[i][letter]["B"] = parseFloat(keys[j]);
-            }
-            
-        }
-    }
-    
-    var colors_string = JSON.stringify(colors)
-        blob = new Blob([colors_string], { type: 'text/plain' }),
-        anchor = document.createElement('a');
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .style("margin-left", -margin.left + "px")
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    */
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+var width = +svg.attr("width");
+var height = +svg.attr("height");
 
-    anchor.download = "hello.txt";
-    anchor.href = (window.webkitURL || window.URL).createObjectURL(blob);
-    anchor.dataset.downloadurl = ['text/plain', anchor.download, anchor.href].join(':');
-    anchor.click();
 
-});
-*/
+var num_rows = num_ids;
+var num_cols = num_letters;
+var rect_width = width / num_letters;
+var rect_height = height / num_ids;
+var local = d3.local();
 
-$.getJSON("data/synesthesia.json", function(json) {
-    data = json;
-    console.log(data);
-});
+var x = d3.scaleLinear()
+    .domain(d3.range(num_cols))
+    .range([0, width]);
+
+var y = d3.scaleLinear()
+    .domain(d3.range(num_rows))
+    .range([0, height]);
+
+rects = svg
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("g")
+    .selectAll("rect")
+    .data(function (d, letter) {
+        var id = local.get(this);
+        local.set(this, letter);
+        return d;})
+    .enter()
+    .append("rect")
+    .attr("x", function(d, letter){
+        return letter*rect_width;
+    })
+    .attr("y", function(d, letter){
+        var id = local.get(this);
+        return id*rect_height;
+    })
+    .attr("height", rect_height)
+    .attr("width", rect_width)
+    .attr("fill", function(d, letter) {
+        var id = local.get(this);
+        var R = data[id][letter].R;
+        var G = data[id][letter].G;
+        var B = data[id][letter].B;
+        return `rgb(${R * 255}, ${G * 255}, ${B * 255})`
+    })
+
+
 
 
 </script>
