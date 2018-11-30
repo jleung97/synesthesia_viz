@@ -6,7 +6,8 @@
 
 </style>
 <h1></h1></br>
-<svg width="900" height="900"></svg>
+ <svg width="600" height="400"></svg> 
+<!-- svg width="2400" height="1600"></svg> -->
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
 <script lang="javascript" src="data/synesthesia.js"></script>
@@ -51,6 +52,54 @@ function processCSVFile(){
 
     });
 }
+https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
+function rgb2hsv (r, g, b) {
+    var rr, gg, bb,
+        /*
+        r = arguments[0] / 255,
+        g = arguments[1] / 255,
+        b = arguments[2] / 255,
+        */
+        h, s,
+        v = Math.max(r, g, b),
+        diff = v - Math.min(r, g, b),
+        diffc = function(c){
+            return (v - c) / 6 / diff + 1 / 2;
+        };
+
+    if (diff == 0) {
+        h = s = 0;
+    } else {
+        s = diff / v;
+        rr = diffc(r);
+        gg = diffc(g);
+        bb = diffc(b);
+
+        if (r === v) {
+            h = bb - gg;
+        }else if (g === v) {
+            h = (1 / 3) + rr - bb;
+        }else if (b === v) {
+            h = (2 / 3) + gg - rr;
+        }
+        if (h < 0) {
+            h += 1;
+        }else if (h > 1) {
+            h -= 1;
+        }
+    }
+    return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        v: Math.round(v * 100)
+    };
+}
+
+function classifyColor(color, letter){
+    letter_color_counts[letter][color] += 1;
+    return color + " " + letter;
+}
+
 //http://bl.ocks.org/srosenthal/2770072
 //https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
 //https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
@@ -61,14 +110,6 @@ num_ids = data.length;
 num_letters = 26;
 
 
-/*
-var svg = d3.select("body").append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .style("margin-left", -margin.left + "px")
-  .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-    */
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -81,6 +122,17 @@ var num_cols = num_letters;
 var rect_width = width / num_letters;
 var rect_height = height / num_ids;
 var local = d3.local();
+var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
+                "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+var colors = ["white", "black", "gray", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"];
+var letter_color_counts = {};
+letters.forEach(function(letter){
+    letter_color_counts[letter] = {};
+    colors.forEach(function(color){
+        letter_color_counts[letter][color] = 0;
+    });
+});
+
 
 var x = d3.scaleLinear()
     .domain(d3.range(num_cols))
@@ -118,6 +170,36 @@ rects = svg
         var B = data[id][letter].B;
         return `rgb(${R * 255}, ${G * 255}, ${B * 255})`
     })
+    /*
+    .on("mouseover", function(d, letter){
+        console.log(this.getAttribute("class"));
+    })
+    */
+    .attr("class", function(d, letter_code){
+        var id = local.get(this);
+        var R = data[id][letter_code].R;
+        var G = data[id][letter_code].G;
+        var B = data[id][letter_code].B;
+        var hsv = rgb2hsv(R,G,B);
+        var base = "A".charCodeAt(0);
+        var letter = String.fromCharCode(base + letter_code);
+        
+        if (hsv.v < 20)  return classifyColor("black", letter);
+        if (hsv.v > 90 && hsv.s < 10)  return classifyColor("white", letter);
+
+        if (hsv.s < 25) return classifyColor("gray", letter);
+
+        if (hsv.h < 30)   return classifyColor("red", letter);
+        if (hsv.h < 60)   return classifyColor("orange", letter);
+        if (hsv.h < 90)   return classifyColor("yellow", letter);
+        if (hsv.h < 150)  return classifyColor("green", letter);
+        if (hsv.h < 210)  return classifyColor("cyan", letter);
+        if (hsv.h < 270)  return classifyColor("blue", letter);
+        if (hsv.h < 320)  return classifyColor("purple", letter);
+        if (hsv.h < 335)  return classifyColor("pink", letter);
+        return classifyColor("red", letter);
+    });
+
 
 
 
