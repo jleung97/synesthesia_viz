@@ -37,6 +37,10 @@ function processCSVFile(){
                     colors[i][letter]["G"] = parseFloat(csv[i][keys[j]]);
                 }else{ // B
                     colors[i][letter]["B"] = parseFloat(csv[i][keys[j]]);
+                    var hsv = rgb2hsv(colors[i][letter].R, colors[i][letter].G, colors[i][letter].B);
+                    colors[i][letter]["H"] = hsv.h;
+                    colors[i][letter]["S"] = hsv.s;
+                    colors[i][letter]["V"] = hsv.v;
                 }
 
             }
@@ -107,6 +111,7 @@ function classifyColor(color, letter){
 //https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
 //https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118996
 
+
 data = colorData;
 num_ids = data.length;
 num_letters = 26;
@@ -127,6 +132,7 @@ var local = d3.local();
 var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var colors = ["white", "black", "gray", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"];
+/*
 var letter_color_counts = {};
 letters.forEach(function(letter){
     letter_color_counts[letter] = {};
@@ -134,15 +140,8 @@ letters.forEach(function(letter){
         letter_color_counts[letter][color] = 0;
     });
 });
+*/
 
-
-var x = d3.scaleLinear()
-    .domain(d3.range(num_cols))
-    .range([0, width]);
-
-var y = d3.scaleLinear()
-    .domain(d3.range(num_rows))
-    .range([0, height]);
 
 rects = svg
     .selectAll("rect")
@@ -151,7 +150,6 @@ rects = svg
     .append("g")
     .selectAll("rect")
     .data(function (d, letter) {
-        var id = local.get(this);
         local.set(this, letter);
         return d;})
     .enter()
@@ -167,18 +165,17 @@ rects = svg
     .attr("width", rect_width)
     .attr("fill", function(d, letter) {
         var id = local.get(this);
-        var R = data[id][letter].R;
-        var G = data[id][letter].G;
-        var B = data[id][letter].B;
-        return `rgb(${R * 255}, ${G * 255}, ${B * 255})`
+        var cellColor = data[id][letter];
+        return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
     })
     /*
     .on("mouseover", function(d, letter){
         console.log(this.getAttribute("class"));
     })
     */
-    .attr("class", function(d, letter_code){
+    .attr("class", function(d, letter){
         var id = local.get(this);
+        /*
         var R = data[id][letter_code].R;
         var G = data[id][letter_code].G;
         var B = data[id][letter_code].B;
@@ -200,6 +197,22 @@ rects = svg
         if (hsv.h < 320)  return classifyColor("purple", letter);
         if (hsv.h < 335)  return classifyColor("pink", letter);
         return classifyColor("red", letter);
+        */
+        var cellColor = data[id][letter];
+        if (cellColor.V < 20)  return "black";
+        if (cellColor.V > 90 && cellColor.S < 10)  return "white";
+
+        if (cellColor.S < 25) return "gray";
+
+        if (cellColor.H < 30)   return "red";
+        if (cellColor.H < 60)   return "orange";
+        if (cellColor.H < 90)   return "yellow";
+        if (cellColor.H < 150)  return "green";
+        if (cellColor.H < 210)  return "cyan";
+        if (cellColor.H < 270)  return "blue";
+        if (cellColor.H < 320)  return "purple";
+        if (cellColor.H < 335)  return "pink";
+        return "red";
     });
 
 
