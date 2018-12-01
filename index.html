@@ -1,6 +1,23 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+
+.red {
+    fill: 'red';
+}
+.yellow {
+    fill: 'yellow';
+}
+.orange {
+    fill: 'orange';
+}
+.green {
+    fill: 'green';
+}
+.blue {
+    fill: 'blue';
+}
+
 </style>
 <h1></h1></br>
   <button onclick="sortRects()">Click me</button>
@@ -242,8 +259,9 @@ function sortRects() {
             num_of_color = +color_counts[color_num][1];
             endpoint = curr_id + num_of_color;
             for (curr_id; curr_id < endpoint; curr_id++) {
-                // rects[curr_id][letter].attr("fill", color);
-                console.log(rects[curr_id]);
+                rects._groups[curr_id][letter].className = color + " " + curr_letter;
+                rects._groups[curr_id][letter].attr("fill", color);
+                // console.log(rects[curr_id]);
                 console.log(String(curr_letter) + ' ' + String(color) + ' ' + String(curr_id))
             }
         }
