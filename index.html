@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-
-
-
 </style>
 <h1></h1></br>
- <svg width="600" height="400"></svg> 
+  <button onclick="sortRects()">Click me</button>
+  <svg id='unsorted' width="600" height="400"></svg>
+  <br>
+  <svg id='sorted' width="600" height="400"></svg>
+
 <!-- svg width="2400" height="1600"></svg> -->
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
@@ -37,10 +38,10 @@ function processCSVFile(){
                 }else{ // B
                     colors[i][letter]["B"] = parseFloat(csv[i][keys[j]]);
                 }
-                
+
             }
         }
-        
+
         colors_string = JSON.stringify(colors)
             blob = new Blob([colors_string], { type: 'text/plain' }),
             anchor = document.createElement('a');
@@ -100,6 +101,7 @@ function classifyColor(color, letter){
     return color + " " + letter;
 }
 
+
 //http://bl.ocks.org/srosenthal/2770072
 //https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
 //https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
@@ -110,19 +112,19 @@ num_ids = data.length;
 num_letters = 26;
 
 
-var svg = d3.select("svg"),
+var svg = d3.select("#unsorted"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 var width = +svg.attr("width");
 var height = +svg.attr("height");
 
-
+var total_count = 6558;
 var num_rows = num_ids;
 var num_cols = num_letters;
 var rect_width = width / num_letters;
 var rect_height = height / num_ids;
 var local = d3.local();
-var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", 
+var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var colors = ["white", "black", "gray", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"];
 var letter_color_counts = {};
@@ -183,7 +185,7 @@ rects = svg
         var hsv = rgb2hsv(R,G,B);
         var base = "A".charCodeAt(0);
         var letter = String.fromCharCode(base + letter_code);
-        
+
         if (hsv.v < 20)  return classifyColor("black", letter);
         if (hsv.v > 90 && hsv.s < 10)  return classifyColor("white", letter);
 
@@ -201,7 +203,44 @@ rects = svg
     });
 
 
+function sortRects() {
+    // rects = svg.selectAll("rect")
+    // .attr("x", function(d) {
+    //     console.log(this)
+    // });
+    console.log(rects);
+    var orderedColor = {
+        "A": [['red', '2'], ['green', '4'], ['blue', '6']],
+        "B": [['yellow', '1'], ['blue', '2'], ['green', '3'], ['black', '6']],
+        "C": [['red', '5'], ['orange', '7']],
+        "D": [['blue', '1'], ['green', '1'], ['blue', '1'], ['red', '4'], ['yellow', '5']]
+    };
+    // console.log(orderedColor[0]);
+    // for (var letter = 0; letter < num_letters; letter++) {
+    var curr_id, curr_letter, color_counts, color_num, color, num_of_color, endpoint;
 
+    for (var letter = 0; letter < 4; letter++) {
+        curr_id = 0;
+        curr_letter = letters[letter]
+        color_counts = orderedColor[curr_letter]
+        // console.log(color_counts);
+        for (color_num = 0; color_num < color_counts.length; color_num++) {
+            color = color_counts[color_num][0];
+            num_of_color = +color_counts[color_num][1];
+            endpoint = curr_id + num_of_color;
+            for (curr_id; curr_id < endpoint; curr_id++) {
+                // rects[curr_id][letter].attr("fill", color);
+                console.log(rects[curr_id]);
+                console.log(String(curr_letter) + ' ' + String(color) + ' ' + String(curr_id))
+            }
+        }
+    }
+}
+
+
+// var svg2 = d3.select("#sorted"),
+//     width = +svg.attr("width"),
+//     height = +svg.attr("height");
 
 
 </script>
