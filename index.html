@@ -190,8 +190,10 @@ rects = svg
         console.log(this.getAttribute("class"));
     })
     */
-    .attr("class", function(d, letter){
+    .attr("class", function(d, letter_code){
         var id = local.get(this);
+        var base = "A".charCodeAt(0);
+        var letter = String.fromCharCode(base + letter_code);
         /*
         var R = data[id][letter_code].R;
         var G = data[id][letter_code].G;
@@ -215,21 +217,21 @@ rects = svg
         if (hsv.h < 335)  return classifyColor("pink", letter);
         return classifyColor("red", letter);
         */
-        var cellColor = data[id][letter];
-        if (cellColor.V < 20)  return "black";
-        if (cellColor.V > 90 && cellColor.S < 10)  return "white";
+        var cellColor = data[id][letter_code];
+        if (cellColor.V < 20)  return "black " + letter;
+        if (cellColor.V > 90 && cellColor.S < 10)  return "white " + letter;
 
-        if (cellColor.S < 25) return "gray";
+        if (cellColor.S < 25) return "gray " + letter;
 
-        if (cellColor.H < 30)   return "red";
-        if (cellColor.H < 60)   return "orange";
-        if (cellColor.H < 90)   return "yellow";
-        if (cellColor.H < 150)  return "green";
-        if (cellColor.H < 210)  return "cyan";
-        if (cellColor.H < 270)  return "blue";
-        if (cellColor.H < 320)  return "purple";
-        if (cellColor.H < 335)  return "pink";
-        return "red";
+        if (cellColor.H < 30)   return "red " + letter;
+        if (cellColor.H < 60)   return "orange " + letter;
+        if (cellColor.H < 90)   return "yellow " + letter;
+        if (cellColor.H < 150)  return "green " + letter;
+        if (cellColor.H < 210)  return "cyan " + letter;
+        if (cellColor.H < 270)  return "blue " + letter;
+        if (cellColor.H < 320)  return "purple " + letter;
+        if (cellColor.H < 335)  return "pink " + letter;
+        return "red " + letter;
     });
 
 
