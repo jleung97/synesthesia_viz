@@ -161,11 +161,13 @@ rects = svg
     })
     .attr("height", rect_height)
     .attr("width", rect_width)
+    /*
     .attr("fill", function(d, letter) {
         var id = local.get(this);
         var cellColor = data[id][letter];
         return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
     })
+    */
     /*
     .on("mouseover", function(d, letter){
         console.log(this.getAttribute("class"));
