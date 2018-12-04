@@ -1,31 +1,13 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
-
-.red {
-    fill: 'red';
-}
-.yellow {
-    fill: 'yellow';
-}
-.orange {
-    fill: 'orange';
-}
-.green {
-    fill: 'green';
-}
-.blue {
-    fill: 'blue';
-}
-
 </style>
-<h1></h1></br>
+
   <button onclick="sortRects()">Click me</button>
   <svg id='unsorted' width="600" height="400"></svg>
   <br>
   <svg id='sorted' width="600" height="400"></svg>
 
-<!-- svg width="2400" height="1600"></svg> -->
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
 <script lang="javascript" src="data/synesthesia.js"></script>
@@ -121,6 +103,32 @@ function classifyColor(color, letter){
     letter_color_counts[letter][color] += 1;
     return color + " " + letter;
 }
+//
+// var orderedColorbyLetter = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[],
+//     "H":[], "I":[], "J":[], "K":[], "L":[], "M":[], "N":[], "O":[], "P":[], "Q":[],
+//     "R":[], "S":[], "T":[], "U":[], "V":[], "W":[], "X":[], "Y":[], "Z":[]};
+function orderColor() {
+    for (var i = 0; i < letters.length; i++) {
+        var colorCountList = [];
+        for (var j = 0; j < colors.length; j++) {
+            colorCountList.push([colors[j], letter_color_counts[letters[i]][colors[j]].toString()]);
+        }
+        colorCountList = orderColorArr(colorCountList);
+        orderedColorbyLetter[letters[i]] = colorCountList;
+    }
+    // console.log("after");
+    // for (var i = 0; i < Object.keys(orderedColorbyLetter).length; i++) {
+    //     for (var j = 0; j < letters.length; j++) {
+    //         var thing = orderedColorbyLetter[letters[i]];
+    //         console.log(thing[j]);// + ", " + orderedColorbyLetter[letters[i]][j][1]);
+    //     }
+    // }
+}
+
+function orderColorArr(colorCountArr) {
+    colorCountArr.sort(function(a, b) { return (+a[1]) - (+b[1])});
+    return colorCountArr;
+}
 
 
 //http://bl.ocks.org/srosenthal/2770072
@@ -149,6 +157,7 @@ var local = d3.local();
 var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var colors = ["white", "black", "gray", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"];
+// orderColor();
 /*
 var letter_color_counts = {};
 letters.forEach(function(letter){
@@ -236,38 +245,79 @@ rects = svg
 
 
 function sortRects() {
-    // rects = svg.selectAll("rect")
-    // .attr("x", function(d) {
-    //     console.log(this)
-    // });
-    console.log(rects);
-    var orderedColor = {
-        "A": [['red', '2'], ['green', '4'], ['blue', '6']],
-        "B": [['yellow', '1'], ['blue', '2'], ['green', '3'], ['black', '6']],
-        "C": [['red', '5'], ['orange', '7']],
-        "D": [['blue', '1'], ['green', '1'], ['blue', '1'], ['red', '4'], ['yellow', '5']]
-    };
-    // console.log(orderedColor[0]);
-    // for (var letter = 0; letter < num_letters; letter++) {
+    // console.log(JSON.stringify(orderedColorbyLetter))
     var curr_id, curr_letter, color_counts, color_num, color, num_of_color, endpoint;
 
-    for (var letter = 0; letter < 4; letter++) {
+    for (var letter = 0; letter < num_letters; letter++) {
         curr_id = 0;
         curr_letter = letters[letter]
-        color_counts = orderedColor[curr_letter]
+        color_counts = orderedColorbyLetter[curr_letter]
         // console.log(color_counts);
         for (color_num = 0; color_num < color_counts.length; color_num++) {
             color = color_counts[color_num][0];
             num_of_color = +color_counts[color_num][1];
             endpoint = curr_id + num_of_color;
             for (curr_id; curr_id < endpoint; curr_id++) {
-                rects._groups[curr_id][letter].className = color + " " + curr_letter;
-                rects._groups[curr_id][letter].attr("fill", color);
+                rects._groups[curr_id][letter].removeAttribute("class");
+                rects._groups[curr_id][letter].classList.add(color);
+                rects._groups[curr_id][letter].classList.add(curr_letter);
                 // console.log(rects[curr_id]);
-                console.log(String(curr_letter) + ' ' + String(color) + ' ' + String(curr_id))
+                // console.log(String(curr_letter) + ' ' + String(color) + ' ' + String(curr_id))
             }
         }
     }
+
+    // d3.selectAll(".black").attr("fill", "black")
+    // d3.selectAll(".white").attr("fill", "white")
+    // d3.selectAll(".gray").attr("fill", "gray")
+    // d3.selectAll(".red").attr("fill", "red")
+    // d3.selectAll(".orange").attr("fill", "#FFE4B5")
+    // d3.selectAll(".yellow").attr("fill", "#F8FACD")
+    // d3.selectAll(".green").attr("fill", "#D2FACD")
+    // d3.selectAll(".cyan").attr("fill", "#CDFAEC")
+    // d3.selectAll(".blue").attr("fill", "#A2A8FD")
+    // d3.selectAll(".purple").attr("fill", "#purple")
+    // d3.selectAll(".pink").attr("fill", "FACDCD")
+    //
+    // d3.selectAll(".black").attr("fill", "black")
+    // d3.selectAll(".white").attr("fill", "white")
+    // d3.selectAll(".gray").attr("fill", "gray")
+    // d3.selectAll(".red").attr("fill", "red")
+    // d3.selectAll(".orange").attr("fill", "orange")
+    // d3.selectAll(".yellow").attr("fill", "yellow")
+    // d3.selectAll(".green").attr("fill", "green")
+    // d3.selectAll(".cyan").attr("fill", "cyan")
+    // d3.selectAll(".blue").attr("fill", "blue")
+    // d3.selectAll(".purple").attr("fill", "purple")
+    // d3.selectAll(".pink").attr("fill", "pink")
+    //
+    // d3.selectAll(".black").attr("fill", "black")
+    // d3.selectAll(".white").attr("fill", "white")
+    // d3.selectAll(".gray").attr("fill", "gray")
+    // d3.selectAll(".red").attr("fill", "#A60303")
+    // d3.selectAll(".orange").attr("fill", "#EE7600")
+    // d3.selectAll(".yellow").attr("fill", "gold")
+    // d3.selectAll(".green").attr("fill", "darkgreen")
+    // d3.selectAll(".cyan").attr("fill", "mediumturquoise")
+    // d3.selectAll(".blue").attr("fill", "navy")
+    // d3.selectAll(".purple").attr("fill", "indigo")
+    // d3.selectAll(".pink").attr("fill", "#D8007B")
+
+
+    d3.selectAll(".black").attr("fill", "#252525")
+    d3.selectAll(".white").attr("fill", "#FFF5F0")
+    d3.selectAll(".gray").attr("fill", "gray")
+    d3.selectAll(".red").attr("fill", "#BD0026")
+    d3.selectAll(".orange").attr("fill", "#CC4C02")
+    d3.selectAll(".yellow").attr("fill", "#FEC44F")
+    d3.selectAll(".green").attr("fill", "#006837")
+    d3.selectAll(".cyan").attr("fill", "#4EB3D3")
+    d3.selectAll(".blue").attr("fill", "#253494")
+    d3.selectAll(".purple").attr("fill", "#3F007D")
+    d3.selectAll(".pink").attr("fill", "#980043")
+
+
+
 }
 
 
