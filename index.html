@@ -6,7 +6,7 @@
   <button onclick="sortRects()">Click me</button>
   <svg id='unsorted' width="600" height="400"></svg>
   <br>
-  <svg id='sorted' width="600" height="400"></svg>
+  <!-- <svg id='sorted' width="600" height="400"></svg> -->
 
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
@@ -110,8 +110,13 @@ function classifyColor(color, letter){
 function orderColor() {
     for (var i = 0; i < letters.length; i++) {
         var colorCountList = [];
+        /*
         for (var j = 0; j < colors.length; j++) {
             colorCountList.push([colors[j], letter_color_counts[letters[i]][colors[j]].toString()]);
+        }
+        */
+        for (var color in colors) {
+            colorCountList.push([color, letter_color_counts[letters[i]][color]]);
         }
         colorCountList = orderColorArr(colorCountList);
         orderedColorbyLetter[letters[i]] = colorCountList;
@@ -145,18 +150,31 @@ num_letters = 26;
 var svg = d3.select("#unsorted"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
-var width = +svg.attr("width");
-var height = +svg.attr("height");
+var graph_width = +svg.attr("width");
+var graph_height = +svg.attr("height") - 20;
 
 var total_count = 6558;
 var num_rows = num_ids;
 var num_cols = num_letters;
-var rect_width = width / num_letters;
-var rect_height = height / num_ids;
+var rect_width = graph_width / num_letters;
+var rect_height = graph_height / num_ids;
 var local = d3.local();
+var colorMap = {}
 var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-var colors = ["white", "black", "gray", "red", "orange", "yellow", "green", "cyan", "blue", "purple", "pink"];
+var colors = {
+    "white":"white", 
+    "black":"black", 
+    "gray":"gray", 
+    "red":"red", 
+    "orange":"orange", 
+    "yellow":"yellow", 
+    "green":"green", 
+    "cyan":"cyan", 
+    "blue":"blue", 
+    "purple":"purple", 
+    "pink":"pink"
+};
 // orderColor();
 /*
 var letter_color_counts = {};
@@ -189,13 +207,13 @@ rects = svg
     })
     .attr("height", rect_height)
     .attr("width", rect_width)
-    /*
+    
     .attr("fill", function(d, letter) {
         var id = local.get(this);
         var cellColor = data[id][letter];
         return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
     })
-    */
+    
     /*
     .on("mouseover", function(d, letter){
         console.log(this.getAttribute("class"));
@@ -243,6 +261,22 @@ rects = svg
         if (cellColor.H < 320)  return "purple " + letter;
         if (cellColor.H < 335)  return "pink " + letter;
         return "red " + letter;
+    });
+
+svg.selectAll("text")
+    .data(letters)
+    .enter()
+    .append("text")
+    .attr("class","graph_label")
+    .attr("transform", function(d, i){
+        return `translate(${ i*rect_width + rect_width / 2 - 3},${total_count * rect_height + 15})`
+    })
+    .style("font-family", "impact")
+    .style("font-size", "16px")
+    //.style("stroke","black")
+    //.style("stroke-width", "0.1px")
+    .text(function(d, i, j){
+        return d;
     });
 
 
@@ -305,7 +339,7 @@ function sortRects() {
     // d3.selectAll(".purple").attr("fill", "indigo")
     // d3.selectAll(".pink").attr("fill", "#D8007B")
 
-
+    /*
     d3.selectAll(".black").attr("fill", "#252525")
     d3.selectAll(".white").attr("fill", "#FFF5F0")
     d3.selectAll(".gray").attr("fill", "gray")
@@ -317,8 +351,30 @@ function sortRects() {
     d3.selectAll(".blue").attr("fill", "#253494")
     d3.selectAll(".purple").attr("fill", "#3F007D")
     d3.selectAll(".pink").attr("fill", "#980043")
+    */
+    d3.selectAll(".black").attr("fill", colors["black"])
+    d3.selectAll(".white").attr("fill", colors["white"])
+    d3.selectAll(".gray").attr("fill", colors["gray"])
+    d3.selectAll(".red").attr("fill", colors["red"])
+    d3.selectAll(".orange").attr("fill", colors["orange"])
+    d3.selectAll(".yellow").attr("fill", colors["yellow"])
+    d3.selectAll(".green").attr("fill", colors["green"])
+    d3.selectAll(".cyan").attr("fill", colors["cyan"])
+    d3.selectAll(".blue").attr("fill", colors["blue"])
+    d3.selectAll(".purple").attr("fill", colors["purple"])
+    d3.selectAll(".pink").attr("fill", colors["pink"])
 
-
+    // change the fill color of the letters
+    svg.selectAll(".graph_label")._groups[0].forEach(function(d){
+        var letter = d.innerHTML;
+        var color = orderedColorbyLetter[letter][10][0];
+        if(color == "white"){
+            d.setAttribute("stroke","black");
+            d.setAttribute("stroke-width","0.2px");
+        }
+        d.setAttribute("fill", colors[color]);
+    });
+    
 
 }
 
