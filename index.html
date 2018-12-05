@@ -1,6 +1,22 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    display: inline-block;
+    padding: 5px;
+    font: 12px sans-serif;
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+path {
+    fill: none;
+    stroke: black;
+}
 </style>
 
   <svg id='unsorted' width="600" height="400" margin-bottom="20px"></svg>
@@ -146,6 +162,10 @@ data = colorData;
 num_ids = data.length;
 num_letters = 26;
 
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
 
 var svg = d3.select("#unsorted"),
     width = +svg.attr("width"),
@@ -163,16 +183,16 @@ var colorMap = {}
 var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var colors = {
-    "white":"white", 
-    "black":"black", 
-    "gray":"gray", 
-    "red":"red", 
-    "orange":"orange", 
-    "yellow":"yellow", 
-    "green":"green", 
-    "cyan":"cyan", 
-    "blue":"blue", 
-    "purple":"purple", 
+    "white":"white",
+    "black":"black",
+    "gray":"gray",
+    "red":"red",
+    "orange":"orange",
+    "yellow":"yellow",
+    "green":"green",
+    "cyan":"cyan",
+    "blue":"blue",
+    "purple":"purple",
     "pink":"pink"
 };
 // orderColor();
@@ -207,13 +227,13 @@ rects = svg
     })
     .attr("height", rect_height)
     .attr("width", rect_width)
-    
+
     .attr("fill", function(d, letter) {
         var id = local.get(this);
         var cellColor = data[id][letter];
         return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
     })
-    
+
     /*
     .on("mouseover", function(d, letter){
         console.log(this.getAttribute("class"));
@@ -261,7 +281,27 @@ rects = svg
         if (cellColor.H < 320)  return "purple " + letter;
         if (cellColor.H < 335)  return "pink " + letter;
         return "red " + letter;
-    });
+    })
+    .on("mouseover", function() {
+          var color = this.classList[0];
+          var letter = this.classList[1];
+          var percent = ((letter_color_counts[letter][color] / num_ids) * 100).toFixed(2) + '%';
+          var tooltip = percent + " of " + letter + " is " + color;
+          div.style("opacity", .9);
+          div.html(tooltip)
+              .style("left", (d3.event.pageX + 10) + "px")
+              .style("top", (d3.event.pageY - 25) + "px");
+
+          // filter on hover
+          // d3.selectAll('rect').style('opacity',function () {
+          //     var o_color = this.classList[0];
+          //     var o_letter = this.classList[1];
+          //     return (color == o_color && letter == o_letter) ? 1.0 : 0.3;
+          // });
+      })
+      .on("mouseout", function(d) {
+          div.style("opacity", 0);
+      });
 
 svg.selectAll("text")
     .data(letters)
@@ -374,7 +414,7 @@ function sortRects() {
         }
         d.setAttribute("fill", colors[color]);
     });
-    
+
 
 }
 
