@@ -59,7 +59,7 @@ function processCSVFile(){
                     colors[i][letter]["V"] = hsv.v;
                 }
             }
-            
+
         }
 
         colors_string = JSON.stringify(colors)
@@ -380,6 +380,14 @@ rects = svg
         if (cellColor.H < 335)  return "pink " + letter;
         return "red " + letter;
     })
+    .on("click", function(d) {
+        console.log("Hi");
+        var color = this.classList[0];
+        d3.selectAll('rect').style('opacity',function () {
+            var o_color = this.classList[0];
+            return (color == o_color) ? 1.0 : 0.3;
+        });
+    })
     .on("mouseover", function() {
           var color = this.classList[0];
           var letter = this.classList[1];
@@ -419,7 +427,7 @@ svg.selectAll("text")
 var toyRects = {};
 for(var i = 0; i < letters.length; i++){
     var letter = letters[i];
-    toyRects[letter] = 
+    toyRects[letter] =
     svg.append("rect")
         .attr("width",rect_width)
         .attr("height",rect_width)
@@ -547,7 +555,7 @@ var bluesCluesImage = toys.append("image")
     });
 
 
-var toyImages = {"magnets":"off", 
+var toyImages = {"magnets":"off",
     "chickaBoom":"off", "bluesClues":"off"};
 
 
