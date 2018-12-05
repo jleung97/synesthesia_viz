@@ -3,7 +3,8 @@
 <style>
 </style>
 
-  <svg id='unsorted' width="600" height="400" margin-bottom="20px"></svg>
+  <svg id='unsorted' width="600" height="500" margin-bottom="20px" float="left"></svg>
+  <svg id='toys' width="330" height="500" float="left"></svg>
   <button position="relative" left="5%" onclick="sortRects()">Click me</button>
   <br>
   <!-- <svg id='sorted' width="600" height="400"></svg> -->
@@ -22,27 +23,27 @@ function processCSVFile(){
         csv = d;
         num_ids = Object.keys(d).length - 1;
         var num_entries = Object.keys(d[0]).length;
-        for(var i = 0; i < num_ids - 1; i++){
+        for(var i = 0; i < (num_ids - 1) / 2; i++){
             colors[i] = [];
-            keys = Object.keys(d[i]);
+            keys = Object.keys(d[0]);
             for(var j = 0; j < num_entries; j++){
                 //var letter = String.fromCharCode(Math.floor(j / 3) + "A".charCodeAt(0));c
                 var letter = Math.floor(j/3);
                 if(colors[i][letter] == null)
                     colors[i][letter] = {};
                 if(j % 3 == 0){ // R
-                    colors[i][letter]["R"] = parseFloat(csv[i][keys[j]]);
+                    colors[i][letter]["R"] = parseFloat(csv[i*2][keys[j]]);
                 }else if(j % 3 == 1){ // G
-                    colors[i][letter]["G"] = parseFloat(csv[i][keys[j]]);
+                    colors[i][letter]["G"] = parseFloat(csv[i*2][keys[j]]);
                 }else{ // B
-                    colors[i][letter]["B"] = parseFloat(csv[i][keys[j]]);
+                    colors[i][letter]["B"] = parseFloat(csv[i*2][keys[j]]);
                     var hsv = rgb2hsv(colors[i][letter].R, colors[i][letter].G, colors[i][letter].B);
                     colors[i][letter]["H"] = hsv.h;
                     colors[i][letter]["S"] = hsv.s;
                     colors[i][letter]["V"] = hsv.v;
                 }
-
             }
+            
         }
 
         colors_string = JSON.stringify(colors)
@@ -135,150 +136,28 @@ function orderColorArr(colorCountArr) {
     return colorCountArr;
 }
 
+function updateToyImages(){
+    if(toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off"){
+        magnetsImage.style("opacity","1");
+        chickaBoomImage.style("opacity","1");
+        bluesCluesImage.style("opacity","1");
+        return;
+    }
+    if(toyImages.magnets == "on" || toyImages.magnets == "persist")
+        magnetsImage.style("opacity","1");
+    else
+        magnetsImage.style("opacity",".2");
 
-//http://bl.ocks.org/srosenthal/2770072
-//https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
-//https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
-//https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0118996
+    if(toyImages.bluesClues == "on" || toyImages.bluesClues == "persist")
+        bluesCluesImage.style("opacity","1");
+    else
+        bluesCluesImage.style("opacity",".2");
 
-
-data = colorData;
-num_ids = data.length;
-num_letters = 26;
-
-
-var svg = d3.select("#unsorted"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height");
-var graph_width = +svg.attr("width");
-var graph_height = +svg.attr("height") - 20;
-
-var total_count = 6558;
-var num_rows = num_ids;
-var num_cols = num_letters;
-var rect_width = graph_width / num_letters;
-var rect_height = graph_height / num_ids;
-var local = d3.local();
-var colorMap = {}
-var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
-                "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
-var colors = {
-    "white":"white", 
-    "black":"black", 
-    "gray":"gray", 
-    "red":"red", 
-    "orange":"orange", 
-    "yellow":"yellow", 
-    "green":"green", 
-    "cyan":"cyan", 
-    "blue":"blue", 
-    "purple":"purple", 
-    "pink":"pink"
-};
-// orderColor();
-/*
-var letter_color_counts = {};
-letters.forEach(function(letter){
-    letter_color_counts[letter] = {};
-    colors.forEach(function(color){
-        letter_color_counts[letter][color] = 0;
-    });
-});
-*/
-
-
-rects = svg
-    .selectAll("rect")
-    .data(data)
-    .enter()
-    .append("g")
-    .selectAll("rect")
-    .data(function (d, letter) {
-        local.set(this, letter);
-        return d;})
-    .enter()
-    .append("rect")
-    .attr("x", function(d, letter){
-        return letter*rect_width;
-    })
-    .attr("y", function(d, letter){
-        var id = local.get(this);
-        return id*rect_height;
-    })
-    .attr("height", rect_height)
-    .attr("width", rect_width)
-    
-    .attr("fill", function(d, letter) {
-        var id = local.get(this);
-        var cellColor = data[id][letter];
-        return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
-    })
-    
-    /*
-    .on("mouseover", function(d, letter){
-        console.log(this.getAttribute("class"));
-    })
-    */
-    .attr("class", function(d, letter_code){
-        var id = local.get(this);
-        var base = "A".charCodeAt(0);
-        var letter = String.fromCharCode(base + letter_code);
-        /*
-        var R = data[id][letter_code].R;
-        var G = data[id][letter_code].G;
-        var B = data[id][letter_code].B;
-        var hsv = rgb2hsv(R,G,B);
-        var base = "A".charCodeAt(0);
-        var letter = String.fromCharCode(base + letter_code);
-
-        if (hsv.v < 20)  return classifyColor("black", letter);
-        if (hsv.v > 90 && hsv.s < 10)  return classifyColor("white", letter);
-
-        if (hsv.s < 25) return classifyColor("gray", letter);
-
-        if (hsv.h < 30)   return classifyColor("red", letter);
-        if (hsv.h < 60)   return classifyColor("orange", letter);
-        if (hsv.h < 90)   return classifyColor("yellow", letter);
-        if (hsv.h < 150)  return classifyColor("green", letter);
-        if (hsv.h < 210)  return classifyColor("cyan", letter);
-        if (hsv.h < 270)  return classifyColor("blue", letter);
-        if (hsv.h < 320)  return classifyColor("purple", letter);
-        if (hsv.h < 335)  return classifyColor("pink", letter);
-        return classifyColor("red", letter);
-        */
-        var cellColor = data[id][letter_code];
-        if (cellColor.V < 20)  return "black " + letter;
-        if (cellColor.V > 90 && cellColor.S < 10)  return "white " + letter;
-
-        if (cellColor.S < 25) return "gray " + letter;
-
-        if (cellColor.H < 30)   return "red " + letter;
-        if (cellColor.H < 60)   return "orange " + letter;
-        if (cellColor.H < 90)   return "yellow " + letter;
-        if (cellColor.H < 150)  return "green " + letter;
-        if (cellColor.H < 210)  return "cyan " + letter;
-        if (cellColor.H < 270)  return "blue " + letter;
-        if (cellColor.H < 320)  return "purple " + letter;
-        if (cellColor.H < 335)  return "pink " + letter;
-        return "red " + letter;
-    });
-
-svg.selectAll("text")
-    .data(letters)
-    .enter()
-    .append("text")
-    .attr("class","graph_label")
-    .attr("transform", function(d, i){
-        return `translate(${ i*rect_width + rect_width / 2 - 3},${total_count * rect_height + 15})`
-    })
-    .style("font-family", "impact")
-    .style("font-size", "16px")
-    //.style("stroke","black")
-    //.style("stroke-width", "0.1px")
-    .text(function(d, i, j){
-        return d;
-    });
-
+    if(toyImages.chickaBoom == "on" || toyImages.chickaBoom == "persist")
+        chickaBoomImage.style("opacity","1");
+    else
+        chickaBoomImage.style("opacity",".2");
+}
 
 function sortRects() {
     // console.log(JSON.stringify(orderedColorbyLetter))
@@ -352,17 +231,17 @@ function sortRects() {
     d3.selectAll(".purple").attr("fill", "#3F007D")
     d3.selectAll(".pink").attr("fill", "#980043")
     */
-    d3.selectAll(".black").attr("fill", colors["black"])
-    d3.selectAll(".white").attr("fill", colors["white"])
-    d3.selectAll(".gray").attr("fill", colors["gray"])
-    d3.selectAll(".red").attr("fill", colors["red"])
-    d3.selectAll(".orange").attr("fill", colors["orange"])
-    d3.selectAll(".yellow").attr("fill", colors["yellow"])
-    d3.selectAll(".green").attr("fill", colors["green"])
-    d3.selectAll(".cyan").attr("fill", colors["cyan"])
-    d3.selectAll(".blue").attr("fill", colors["blue"])
-    d3.selectAll(".purple").attr("fill", colors["purple"])
-    d3.selectAll(".pink").attr("fill", colors["pink"])
+    d3.selectAll(".black").attr("fill", colors["black"]);
+    d3.selectAll(".white").attr("fill", colors["white"]);
+    d3.selectAll(".gray").attr("fill", colors["gray"]);
+    d3.selectAll(".red").attr("fill", colors["red"]);
+    d3.selectAll(".orange").attr("fill", colors["orange"]);
+    d3.selectAll(".yellow").attr("fill", colors["yellow"]);
+    d3.selectAll(".green").attr("fill", colors["green"]);
+    d3.selectAll(".cyan").attr("fill", colors["cyan"]);
+    d3.selectAll(".blue").attr("fill", colors["blue"]);
+    d3.selectAll(".purple").attr("fill", colors["purple"]);
+    d3.selectAll(".pink").attr("fill", colors["pink"]);
 
     // change the fill color of the letters
     svg.selectAll(".graph_label")._groups[0].forEach(function(d){
@@ -374,14 +253,261 @@ function sortRects() {
         }
         d.setAttribute("fill", colors[color]);
     });
-    
-
 }
 
 
-// var svg2 = d3.select("#sorted"),
-//     width = +svg.attr("width"),
-//     height = +svg.attr("height");
+//http://bl.ocks.org/srosenthal/2770072
+//https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
+//https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
+//https://journals.plos.org/plosone/article?id=10.2371/journal.pone.0118996
+
+
+data = colorData;
+num_ids = data.length;
+num_letters = 26;
+
+var toys = d3.select("#toys"),
+    toy_width = +toys.attr("width"),
+    toy_height = +toys.attr("height");
+var svg = d3.select("#unsorted"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+var graph_width = +svg.attr("width");
+var graph_height = +svg.attr("height") - 45;
+
+var total_count = colorData.length;
+var num_rows = num_ids;
+var num_cols = num_letters;
+var rect_width = graph_width / num_letters;
+var rect_height = graph_height / num_ids;
+var local = d3.local();
+var colorMap = {}
+var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
+                "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
+var colors = {
+    "white":"white", 
+    "black":"black", 
+    "gray":"gray", 
+    "red":"red", 
+    "orange":"orange", 
+    "yellow":"yellow", 
+    "green":"green", 
+    "cyan":"cyan", 
+    "blue":"blue", 
+    "purple":"purple", 
+    "pink":"pink"
+};
+// orderColor();
+/*
+var letter_color_counts = {};
+letters.forEach(function(letter){
+    letter_color_counts[letter] = {};
+    colors.forEach(function(color){
+        letter_color_counts[letter][color] = 0;
+    });
+});
+*/
+
+
+rects = svg
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("g")
+    .selectAll("rect")
+    .data(function (d, letter) {
+        local.set(this, letter);
+        return d;})
+    .enter()
+    .append("rect")
+    .attr("x", function(d, letter){
+        return letter*rect_width;
+    })
+    .attr("y", function(d, letter){
+        var id = local.get(this);
+        return id*rect_height;
+    })
+    .attr("height", rect_height)
+    .attr("width", rect_width)
+    
+    .attr("fill", function(d, letter) {
+        var id = local.get(this);
+        var cellColor = data[id][letter];
+        return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
+    })
+    
+    .attr("class", function(d, letter_code){
+        var id = local.get(this);
+        var base = "A".charCodeAt(0);
+        var letter = String.fromCharCode(base + letter_code);
+
+        var cellColor = data[id][letter_code];
+        if (cellColor.V < 20)  return "black " + letter;
+        if (cellColor.V > 90 && cellColor.S < 10)  return "white " + letter;
+
+        if (cellColor.S < 25) return "gray " + letter;
+
+        if (cellColor.H < 30)   return "red " + letter;
+        if (cellColor.H < 60)   return "orange " + letter;
+        if (cellColor.H < 90)   return "yellow " + letter;
+        if (cellColor.H < 150)  return "green " + letter;
+        if (cellColor.H < 210)  return "cyan " + letter;
+        if (cellColor.H < 270)  return "blue " + letter;
+        if (cellColor.H < 320)  return "purple " + letter;
+        if (cellColor.H < 335)  return "pink " + letter;
+        return "red " + letter;
+    });
+
+svg.selectAll("text")
+    .data(letters)
+    .enter()
+    .append("text")
+    .attr("class","graph_label")
+    .attr("transform", function(d, i){
+        return `translate(${ i*rect_width + rect_width / 2 - 3},${total_count * rect_height + 20})`
+    })
+    .style("font-family", "impact")
+    .style("font-size", "16px")
+    .style("opacity","1")
+    .text(function(d, i, j){
+        return d;
+    });
+
+var toyRects = {};
+for(var i = 0; i < letters.length; i++){
+    var letter = letters[i];
+    toyRects[letter] = 
+    svg.append("rect")
+        .attr("width",rect_width)
+        .attr("height",rect_width)
+        .attr("y",total_count * rect_height + 30)
+        .attr("x",i*rect_width)
+        .attr("fill","white")
+        .style("opacity","1");
+}
+
+var toyDescription = toys.append("text")
+    .attr("x","5")
+    .attr("y","15")
+    .style("font-family","Lucida Console")
+    .style("font-size","14px")
+    .text("Click the button!")
+
+var magnetsImage = toys.append("image")
+    .attr('xlink:href', 'magnets.jpeg')
+    .attr("x","0")
+    .attr("y","40")
+    .attr("width","200")
+    .attr("height","120")
+    .on("click",function(d){
+        if(toyImages.magnets == "persist"){
+            rects.style("opacity","1");
+            toyImages.magnets = "off";
+            for(letter in toyRects){
+                toyRects[letter].attr("fill","white");
+            }
+            updateToyImages();
+        }else{
+            rects.style("opacity",".2");
+            for(var letter in magnets){
+                var color = magnets[letter];
+                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
+                toyRects[letter].attr("fill",colors[color]);
+            }
+            toyImages.magnets = "persist";
+            updateToyImages();
+        }
+    })
+    .on("mouseout",function(d){
+        if(toyImages.magnets != "persist")
+            toyImages.magnets = "off";
+        updateToyImages();
+    })
+    .on("mouseover",function(d){
+        if(toyImages.magnets != "persist")
+            toyImages.magnets = "on";
+        updateToyImages();
+        toyDescription.text("A popular magnet letter-set by Fisher-Price");
+    });
+
+
+var chickaBoomImage = toys.append("image")
+    .attr('xlink:href', 'chickaBoom.png')
+    .attr("x","0")
+    .attr("y","190")
+    .attr("width","200")
+    .attr("height","120")
+    .on("click",function(d){
+        if(toyImages.chickaBoom == "persist"){
+            rects.style("opacity","1");
+            toyImages.chickaBoom = "off";
+            for(letter in toyRects){
+                toyRects[letter].attr("fill","white");
+            }
+            updateToyImages();
+        }else{
+            rects.style("opacity",".2");
+            for(var letter in chickaBoom){
+                var color = chickaBoom[letter];
+                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
+                toyRects[letter].attr("fill",colors[color]);
+            }
+            toyImages.chickaBoom = "persist";
+        }
+    })
+    .on("mouseout",function(d){
+        if(toyImages.chickaBoom != "persist")
+            toyImages.chickaBoom = "off";
+        updateToyImages();
+    })
+    .on("mouseover",function(d){
+        if(toyImages.chickaBoom != "persist")
+            toyImages.chickaBoom = "on";
+        updateToyImages();
+        toyDescription.text("Top-selling alphabet book on Amazon (November 2018)");
+    });
+
+var bluesCluesImage = toys.append("image")
+    .attr('xlink:href', 'bluesClues.jpg')
+    .attr("x","0")
+    .attr("y","350")
+    .attr("width","200")
+    .attr("height","120")
+    .on("click",function(d){
+        if(toyImages.bluesClues == "persist"){
+            rects.style("opacity","1");
+            toyImages.bluesClues = "off";
+            for(letter in toyRects){
+                toyRects[letter].attr("fill","white");
+            }
+            updateToyImages();
+        }else{
+            rects.style("opacity",".2");
+            for(var letter in bluesClues){
+                var color = bluesClues[letter];
+                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
+                toyRects[letter].attr("fill",colors[color]);
+            }
+            toyImages.bluesClues = "persist";
+        }
+    })
+    .on("mouseout",function(d){
+        if(toyImages.bluesClues != "persist")
+            toyImages.bluesClues = "off";
+        updateToyImages();
+    })
+    .on("mouseover",function(d){
+        if(toyImages.bluesClues != "persist")
+            toyImages.bluesClues = "on";
+        updateToyImages();
+        toyDescription.text("\"Alphabet Train\" on Blue's Clues (S05E11 2003)");
+    });
+
+var toyImages = {"magnets":"off", 
+    "chickaBoom":"off", "bluesClues":"off"};
+
+
+
 
 
 </script>
