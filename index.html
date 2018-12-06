@@ -19,9 +19,10 @@ path {
 }
 </style>
 
-  <svg id='unsorted' width="600" height="500" margin-bottom="20px" float="left"></svg>
-  <svg id='toys' width="330" height="500" float="left"></svg>
-  <button position="relative" left="5%" onclick="sortRects()">Click me</button>
+  <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg>
+  <button display="block" clear="both" position="relative" left="5%" onclick="sortRects()">Click me</button>
+  <svg id='toys' width="500" height="600" float="left"></svg>
+  
   <br>
   <!-- <svg id='sorted' width="600" height="400"></svg> -->
 
@@ -408,6 +409,7 @@ rects = svg
       .on("mouseout", function(d) {
           div.style("opacity", 0);
       });
+      
 
 svg.selectAll("text")
     .data(letters)
@@ -441,15 +443,15 @@ var toyDescription = toys.append("text")
     .attr("x","5")
     .attr("y","15")
     .style("font-family","Lucida Console")
-    .style("font-size","14px")
+    .style("font-size","18px")
     .text("Click the button!")
 
 var magnetsImage = toys.append("image")
     .attr('xlink:href', 'magnets.jpeg')
     .attr("x","30")
     .attr("y","40")
-    .attr("width","173")
-    .attr("height","120")
+    .attr("width","217")
+    .attr("height","150")
     .on("click",function(d){
         if(toyImages.magnets == "persist"){
             rects.style("opacity","1");
@@ -486,8 +488,8 @@ var chickaBoomImage = toys.append("image")
     .attr('xlink:href', 'chickaBoom.png')
     .attr("x","30")
     .attr("y","190")
-    .attr("width","93")
-    .attr("height","120")
+    .attr("width","117")
+    .attr("height","150")
     .on("click",function(d){
         if(toyImages.chickaBoom == "persist"){
             rects.style("opacity","1");
@@ -522,8 +524,8 @@ var bluesCluesImage = toys.append("image")
     .attr('xlink:href', 'bluesClues.jpg')
     .attr("x","30")
     .attr("y","350")
-    .attr("width","80")
-    .attr("height","120")
+    .attr("width","100")
+    .attr("height","150")
     .on("click",function(d){
         if(toyImages.bluesClues == "persist"){
             rects.style("opacity","1");
