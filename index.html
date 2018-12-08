@@ -12,7 +12,7 @@ div.tooltip {
     border-radius: 8px;
     pointer-events: none;
 }
-
+aa
 path {
     fill: none;
     stroke: black;
@@ -22,7 +22,8 @@ path {
   <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg>
   <button display="block" clear="both" position="relative" left="5%" onclick="sortRects()">Click me</button>
   <svg id='toys' width="500" height="600" float="left"></svg>
-  
+  <svg id='testing' width="800" height="600" margin-bottom="20px" float="left"></svg>
+
   <br>
   <!-- <svg id='sorted' width="600" height="400"></svg> -->
 
@@ -333,7 +334,7 @@ var graph_height = +svg.attr("height") - 45;
 var total_count = colorData.length;
 var num_rows = num_ids;
 var num_cols = num_letters;
-var rect_width = graph_width / num_letters;
+var rect_width = (graph_width - 25) / num_letters;
 var rect_height = graph_height / num_ids;
 var local = d3.local();
 var colorMap = {}
@@ -408,8 +409,9 @@ for (var letter in orderedColorbyLetter){
         y_offset += rect_height * count;
     })
     y_offset = 0;
-    x_offset += rect_width;
+    x_offset += rect_width + 1;
 }
+
 
 for(var i = 0; i < num_ids; i++){
     for(var j = 0; j < letters.length; j++){
@@ -442,64 +444,36 @@ rects = svg
     })
     .attr("height", rect_height)
     .attr("width", rect_width)
-
-    .attr("fill", function(d, letter) {
-        var id = local.get(this);
-        var cellColor = data[id][letter];
-        return `rgb(${cellColor.R * 255}, ${cellColor.G * 255}, ${cellColor.B * 255})`
-    })
-
-    .attr("class", function(d, letter_code){
-        var id = local.get(this);
-        var base = "A".charCodeAt(0);
-        var letter = String.fromCharCode(base + letter_code);
-
-        var cellColor = data[id][letter_code];
-        if (cellColor.V < 20)  return "black " + letter;
-        if (cellColor.V > 90 && cellColor.S < 10)  return "white " + letter;
-
-        if (cellColor.S < 25) return "gray " + letter;
-
-        if (cellColor.H < 30)   return "red " + letter;
-        if (cellColor.H < 60)   return "orange " + letter;
-        if (cellColor.H < 90)   return "yellow " + letter;
-        if (cellColor.H < 150)  return "green " + letter;
-        if (cellColor.H < 210)  return "cyan " + letter;
-        if (cellColor.H < 270)  return "blue " + letter;
-        if (cellColor.H < 320)  return "purple " + letter;
-        if (cellColor.H < 335)  return "pink " + letter;
-        return "red " + letter;
-    })
-    .on("click", function(d) {
-        console.log("Hi");
-        var color = this.classList[0];
-        d3.selectAll('rect').style('opacity',function () {
-            var o_color = this.classList[0];
-            return (color == o_color) ? 1.0 : 0.3;
-        });
-    })
-    .on("mouseover", function() {
-          var color = this.classList[0];
-          var letter = this.classList[1];
-          var percent = ((letter_color_counts[letter][color] / num_ids) * 100).toFixed(2) + '%';
-          var tooltip = percent + " of " + letter + " is " + color;
-          div.style("opacity", .9);
-          div.html(tooltip)
-              .style("left", (d3.event.pageX + 10) + "px")
-              .style("top", (d3.event.pageY - 25) + "px");
-
-          // filter on hover
-          // d3.selectAll('rect').style('opacity',function () {
-          //     var o_color = this.classList[0];
-          //     var o_letter = this.classList[1];
-          //     return (color == o_color && letter == o_letter) ? 1.0 : 0.3;
-          // });
-      })
-      .on("mouseout", function(d) {
-          div.style("opacity", 0);
-      });
 */
-rects = svg.selectAll("rect");
+var prev_clicked = null;
+rects = svg.selectAll("rect")
+    .on("click", function() {
+        var clicked_color = this.classList[0];
+        var load_orig = clicked_color == prev_clicked;
+
+        prev_clicked = load_orig ? null : clicked_color;
+        var clicked_count = 0;
+        var x_offset = y_offset = 0;
+        for (var letter in orderedColorbyLetter){
+            orderedColorbyLetter[letter].forEach(function(color_count){
+                var color = color_count[0];
+                var count = color_count[1];
+                if (clicked_color != color || load_orig) {
+                    d3.select("." + color + "." + letter)
+                        .attr("y", y_offset)
+                    y_offset += rect_height * count;
+                }
+            })
+            if (!load_orig) {
+                d3.select("." + clicked_color + "." + letter)
+                    .attr("y", y_offset)
+            }
+            y_offset = 0;
+        }
+    });
+
+
+
 
 var graph_labels = svg.selectAll("text")
     .data(letters)
