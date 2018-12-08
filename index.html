@@ -50,10 +50,9 @@ div.tooltip {
     border-radius: 8px;
     pointer-events: none;
 }
-aa
-path {
-    fill: none;
-    stroke: black;
+
+rect, image {
+    cursor: pointer;
 }
 </style>
 
@@ -461,7 +460,7 @@ for (var letter in orderedColorbyLetter){
             })
             .on("mousemove", function(){
                 tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
-                return 
+                return
                 })
             .on("mouseout", function(d) {
               tooltip.style("opacity", 0);
@@ -520,12 +519,18 @@ rects = svg.selectAll("rect")
                 var count = color_count[1];
                 if (clicked_color != color || load_orig) {
                     d3.select("." + color + "." + letter)
+                        .transition()
+                        .duration(700)
+                        .ease(d3.easeExpInOut)
                         .attr("y", y_offset)
                     y_offset += rect_height * count;
                 }
             })
             if (!load_orig) {
                 d3.select("." + clicked_color + "." + letter)
+                    .transition()
+                    .duration(700)
+                    .ease(d3.easeExpInOut)
                     .attr("y", y_offset)
             }
             y_offset = 0;
