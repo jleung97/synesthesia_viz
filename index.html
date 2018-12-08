@@ -332,7 +332,26 @@ letters.forEach(function(letter){
 });
 */
 
+var x_offset = y_offset = 0;
+for (var letter in orderedColorbyLetter){
 
+    orderedColorbyLetter[letter].forEach(function(color_count){
+        var color = color_count[0];
+        var count = color_count[1];
+        svg.append("rect")
+            .attr("width", rect_width)
+            .attr("height", rect_height * count)
+            .attr("x", x_offset)
+            .attr("y", y_offset)
+            .attr("fill", colors[color])
+            .attr("class", `${color} ${letter}`);
+        y_offset += rect_height * count;
+    })
+    y_offset = 0;
+    x_offset += rect_width;
+}
+
+/*
 rects = svg
     .selectAll("rect")
     .data(data)
@@ -409,7 +428,7 @@ rects = svg
       .on("mouseout", function(d) {
           div.style("opacity", 0);
       });
-      
+*/
 
 svg.selectAll("text")
     .data(letters)
