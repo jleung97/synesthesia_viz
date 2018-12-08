@@ -131,11 +131,6 @@ function processCSVFile(){
 //https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
 function rgb2hsv (r, g, b) {
     var rr, gg, bb,
-        /*
-        r = arguments[0] / 255,
-        g = arguments[1] / 255,
-        b = arguments[2] / 255,
-        */
         h, s,
         v = Math.max(r, g, b),
         diff = v - Math.min(r, g, b),
@@ -171,10 +166,28 @@ function rgb2hsv (r, g, b) {
     };
 }
 
-function classifyColor(color, letter){
+// takes a color in HSV format and returns a string of the color classification
+function classifyColor(hsv){
+    /*
     letter_color_counts[letter][color] += 1;
     return color + " " + letter;
+    */
+    if (hsv.V < 20)  return "black";
+    if (hsv.V > 90 && hsv.S < 10)  return "white";
+
+    if (hsv.S < 25) return "gray";
+
+    if (hsv.H < 30)   return "red";
+    if (hsv.H < 60)   return "orange";
+    if (hsv.H < 90)   return "yellow";
+    if (hsv.H < 150)  return "green";
+    if (hsv.H < 210)  return "cyan";
+    if (hsv.H < 270)  return "blue";
+    if (hsv.H < 320)  return "purple";
+    if (hsv.H < 335)  return "pink";
+    return "red"
 }
+
 //
 // var orderedColorbyLetter = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[],
 //     "H":[], "I":[], "J":[], "K":[], "L":[], "M":[], "N":[], "O":[], "P":[], "Q":[],
@@ -340,7 +353,7 @@ function updateRects(){
     }
     fadeAllRects();
     rects_on.forEach(function(className){
-        rectMap[className].style("opacity", "1");
+        rectMap[className].rect.style("opacity", "1");
     });
 }
 
@@ -411,12 +424,17 @@ letters.forEach(function(letter){
 });
 */
 
+
+// draw the sorted rectangles onto svg
 var x_offset = y_offset = 0;
 for (var letter in orderedColorbyLetter){
     orderedColorbyLetter[letter].forEach(function(color_count){
         var color = color_count[0];
         var count = color_count[1];
-        rectMap[`${color} ${letter}`] = svg.append("rect")
+        var key = `${color} ${letter}`;
+        rectMap[key] = {};
+        rectMap[key]["ids"] = [];
+        rectMap[key]["rect"] = svg.append("rect")
             .attr("width", rect_width)
             .attr("height", rect_height * count)
             .attr("x", x_offset)
@@ -427,7 +445,8 @@ for (var letter in orderedColorbyLetter){
                 var color = this.classList[0];
                 var letter = this.classList[1];
                 var percent = ((letter_color_counts[letter][color] / num_ids) * 100).toFixed(2) + '%';
-                var tooltip_text = percent + " of " + letter + " is " + color;
+                //var tooltip_text = percent + " of " + letter + " is " + color;
+                var tooltip_text = percent + " of  synesthetes see " + letter + " as " + color;
                 tooltip.style("opacity", .9);
                 tooltip.html(tooltip_text)
                     .style("left", (d3.event.pageX + 10) + "px")
@@ -440,8 +459,10 @@ for (var letter in orderedColorbyLetter){
                 //     return (color == o_color && letter == o_letter) ? 1.0 : 0.3;
                 // });
             })
-            .on("mousemove", function(){return tooltip.style("top",
-                (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            .on("mousemove", function(){
+                tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
+                return 
+                })
             .on("mouseout", function(d) {
               tooltip.style("opacity", 0);
             });
@@ -451,6 +472,39 @@ for (var letter in orderedColorbyLetter){
     x_offset += rect_width + 1;
 }
 
+
+for(var i = 0; i < num_ids; i++){
+    for(var j = 0; j < letters.length; j++){
+        var base = "A".charCodeAt(0);
+        var letter = String.fromCharCode(base + j);
+        var hsv = data[i][j];
+        var color = classifyColor(hsv);
+        rectMap[`${color} ${letter}`].ids.push(i);
+    }
+}
+
+/*
+rects = svg
+    .selectAll("rect")
+    .data(data)
+    .enter()
+    .append("g")
+    .selectAll("rect")
+    .data(function (d, letter) {
+        local.set(this, letter);
+        return d;})
+    .enter()
+    .append("rect")
+    .attr("x", function(d, letter){
+        return letter*rect_width;
+    })
+    .attr("y", function(d, letter){
+        var id = local.get(this);
+        return id*rect_height;
+    })
+    .attr("height", rect_height)
+    .attr("width", rect_width)
+*/
 var prev_clicked = null;
 rects = svg.selectAll("rect")
     .on("click", function() {
@@ -477,6 +531,7 @@ rects = svg.selectAll("rect")
             y_offset = 0;
         }
     });
+
 
 
 
