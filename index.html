@@ -91,9 +91,9 @@ function processCSVFile(){
     csv_file = "data/onlyrgb.csv";
     d3.csv(csv_file,function(d){
         csv = d;
-        num_ids = Object.keys(d).length - 1;
+        numIDs = Object.keys(d).length - 1;
         var num_entries = Object.keys(d[0]).length;
-        for(var i = 0; i < (num_ids - 1) / 2; i++){
+        for(var i = 0; i < (numIDs - 1) / 2; i++){
             colors[i] = [];
             keys = Object.keys(d[0]);
             for(var j = 0; j < num_entries; j++){
@@ -127,6 +127,7 @@ function processCSVFile(){
 
     });
 }
+
 //https://stackoverflow.com/questions/8022885/rgb-to-hsv-color-in-javascript
 function rgb2hsv (r, g, b) {
     var rr, gg, bb,
@@ -167,10 +168,6 @@ function rgb2hsv (r, g, b) {
 
 // takes a color in HSV format and returns a string of the color classification
 function classifyColor(hsv){
-    /*
-    letter_color_counts[letter][color] += 1;
-    return color + " " + letter;
-    */
     if (hsv.V < 20)  return "black";
     if (hsv.V > 90 && hsv.S < 10)  return "white";
 
@@ -187,7 +184,7 @@ function classifyColor(hsv){
     return "red"
 }
 
-//
+
 // var orderedColorbyLetter = {"A":[], "B":[], "C":[], "D":[], "E":[], "F":[], "G":[],
 //     "H":[], "I":[], "J":[], "K":[], "L":[], "M":[], "N":[], "O":[], "P":[], "Q":[],
 //     "R":[], "S":[], "T":[], "U":[], "V":[], "W":[], "X":[], "Y":[], "Z":[]};
@@ -196,11 +193,11 @@ function orderColor() {
         var colorCountList = [];
         /*
         for (var j = 0; j < colors.length; j++) {
-            colorCountList.push([colors[j], letter_color_counts[letters[i]][colors[j]].toString()]);
+            colorCountList.push([colors[j], letterColorCounts[letters[i]][colors[j]].toString()]);
         }
         */
         for (var color in colors) {
-            colorCountList.push([color, letter_color_counts[letters[i]][color]]);
+            colorCountList.push([color, letterColorCounts[letters[i]][color]]);
         }
         colorCountList = orderColorArr(colorCountList);
         orderedColorbyLetter[letters[i]] = colorCountList;
@@ -242,100 +239,6 @@ function updateToyImages(){
         chickaBoomImage.style("opacity",".2");
 }
 
-function sortRects() {
-    // console.log(JSON.stringify(orderedColorbyLetter))
-    var curr_id, curr_letter, color_counts, color_num, color, num_of_color, endpoint;
-
-    for (var letter = 0; letter < num_letters; letter++) {
-        curr_id = 0;
-        curr_letter = letters[letter]
-        color_counts = orderedColorbyLetter[curr_letter]
-        // console.log(color_counts);
-        for (color_num = 0; color_num < color_counts.length; color_num++) {
-            color = color_counts[color_num][0];
-            num_of_color = +color_counts[color_num][1];
-            endpoint = curr_id + num_of_color;
-            for (curr_id; curr_id < endpoint; curr_id++) {
-                rects._groups[curr_id][letter].removeAttribute("class");
-                rects._groups[curr_id][letter].classList.add(color);
-                rects._groups[curr_id][letter].classList.add(curr_letter);
-                // console.log(rects[curr_id]);
-                // console.log(String(curr_letter) + ' ' + String(color) + ' ' + String(curr_id))
-            }
-        }
-    }
-
-    // d3.selectAll(".black").attr("fill", "black")
-    // d3.selectAll(".white").attr("fill", "white")
-    // d3.selectAll(".gray").attr("fill", "gray")
-    // d3.selectAll(".red").attr("fill", "red")
-    // d3.selectAll(".orange").attr("fill", "#FFE4B5")
-    // d3.selectAll(".yellow").attr("fill", "#F8FACD")
-    // d3.selectAll(".green").attr("fill", "#D2FACD")
-    // d3.selectAll(".cyan").attr("fill", "#CDFAEC")
-    // d3.selectAll(".blue").attr("fill", "#A2A8FD")
-    // d3.selectAll(".purple").attr("fill", "#purple")
-    // d3.selectAll(".pink").attr("fill", "FACDCD")
-    //
-    // d3.selectAll(".black").attr("fill", "black")
-    // d3.selectAll(".white").attr("fill", "white")
-    // d3.selectAll(".gray").attr("fill", "gray")
-    // d3.selectAll(".red").attr("fill", "red")
-    // d3.selectAll(".orange").attr("fill", "orange")
-    // d3.selectAll(".yellow").attr("fill", "yellow")
-    // d3.selectAll(".green").attr("fill", "green")
-    // d3.selectAll(".cyan").attr("fill", "cyan")
-    // d3.selectAll(".blue").attr("fill", "blue")
-    // d3.selectAll(".purple").attr("fill", "purple")
-    // d3.selectAll(".pink").attr("fill", "pink")
-    //
-    // d3.selectAll(".black").attr("fill", "black")
-    // d3.selectAll(".white").attr("fill", "white")
-    // d3.selectAll(".gray").attr("fill", "gray")
-    // d3.selectAll(".red").attr("fill", "#A60303")
-    // d3.selectAll(".orange").attr("fill", "#EE7600")
-    // d3.selectAll(".yellow").attr("fill", "gold")
-    // d3.selectAll(".green").attr("fill", "darkgreen")
-    // d3.selectAll(".cyan").attr("fill", "mediumturquoise")
-    // d3.selectAll(".blue").attr("fill", "navy")
-    // d3.selectAll(".purple").attr("fill", "indigo")
-    // d3.selectAll(".pink").attr("fill", "#D8007B")
-
-    /*
-    d3.selectAll(".black").attr("fill", "#252525")
-    d3.selectAll(".white").attr("fill", "#FFF5F0")
-    d3.selectAll(".gray").attr("fill", "gray")
-    d3.selectAll(".red").attr("fill", "#BD0026")
-    d3.selectAll(".orange").attr("fill", "#CC4C02")
-    d3.selectAll(".yellow").attr("fill", "#FEC44F")
-    d3.selectAll(".green").attr("fill", "#006837")
-    d3.selectAll(".cyan").attr("fill", "#4EB3D3")
-    d3.selectAll(".blue").attr("fill", "#253494")
-    d3.selectAll(".purple").attr("fill", "#3F007D")
-    d3.selectAll(".pink").attr("fill", "#980043")
-    */
-    d3.selectAll(".black").attr("fill", colors["black"]);
-    d3.selectAll(".white").attr("fill", colors["white"]);
-    d3.selectAll(".gray").attr("fill", colors["gray"]);
-    d3.selectAll(".red").attr("fill", colors["red"]);
-    d3.selectAll(".orange").attr("fill", colors["orange"]);
-    d3.selectAll(".yellow").attr("fill", colors["yellow"]);
-    d3.selectAll(".green").attr("fill", colors["green"]);
-    d3.selectAll(".cyan").attr("fill", colors["cyan"]);
-    d3.selectAll(".blue").attr("fill", colors["blue"]);
-    d3.selectAll(".purple").attr("fill", colors["purple"]);
-    d3.selectAll(".pink").attr("fill", colors["pink"]);
-
-    svg.selectAll(".graph_label")._groups[0].forEach(function(d){
-        var letter = d.innerHTML;
-        var color = orderedColorbyLetter[letter][10][0];
-        if(color == "white"){
-            d.setAttribute("stroke","black");
-            d.setAttribute("stroke-width","0.2px");
-        }
-        d.setAttribute("fill", colors[color]);
-    });
-}
 
 function restoreAllRects(){
     rects.style("opacity","1");
@@ -346,12 +249,12 @@ function fadeAllRects(){
 }
 
 function updateRects(){
-    if(rects_on.length == 0){
+    if(rectsOn.length == 0){
         restoreAllRects();
         return;
     }
     fadeAllRects();
-    rects_on.forEach(function(className){
+    rectsOn.forEach(function(className){
         rectMap[className].rect.style("opacity", "1");
     });
 }
@@ -370,14 +273,15 @@ function onBtnClick() {
 
 
 data = colorData;
-num_ids = data.length;
-num_letters = 26;
-rects_on = [];
+numIDs = data.length;
+numLetters = 26;
+rectsOn = [];
 rectMap = {};
+enableIDMouseOver = false;
 
 var toys = d3.select("#toys"),
-    toy_width = +toys.attr("width"),
-    toy_height = +toys.attr("height");
+    toyWidth = +toys.attr("width"),
+    toyHeight = +toys.attr("height");
 
 var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
@@ -387,16 +291,11 @@ var tooltip = d3.select("body").append("div")
 var svg = d3.select("#unsorted"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
-var graph_width = +svg.attr("width");
-var graph_height = +svg.attr("height") - 45;
+var graphWidth = +svg.attr("width");
+var graphHeight = +svg.attr("height") - 45;
 
-var total_count = colorData.length;
-var num_rows = num_ids;
-var num_cols = num_letters;
-var rect_width = (graph_width - 25) / num_letters;
-var rect_height = graph_height / num_ids;
-var local = d3.local();
-var colorMap = {}
+var rectWidth = (graphWidth - 25) / numLetters;
+var rectHeight = graphHeight / numIDs;
 var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
                 "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"];
 var colors = {
@@ -412,67 +311,74 @@ var colors = {
     "purple":"purple",
     "pink":"pink"
 };
-// orderColor();
-/*
-var letter_color_counts = {};
-letters.forEach(function(letter){
-    letter_color_counts[letter] = {};
-    colors.forEach(function(color){
-        letter_color_counts[letter][color] = 0;
-    });
-});
-*/
 
 
 // draw the sorted rectangles onto svg
-var x_offset = y_offset = 0;
+var xOffset = yOffset = 0;
 for (var letter in orderedColorbyLetter){
-    orderedColorbyLetter[letter].forEach(function(color_count){
-        var color = color_count[0];
-        var count = color_count[1];
+    orderedColorbyLetter[letter].forEach(function(colorCount){
+        var color = colorCount[0];
+        var count = colorCount[1];
         var key = `${color} ${letter}`;
         rectMap[key] = {};
         rectMap[key]["ids"] = [];
         rectMap[key]["rect"] = svg.append("rect")
-            .attr("width", rect_width)
-            .attr("height", rect_height * count)
-            .attr("x", x_offset)
-            .attr("y", y_offset)
+            .attr("width", rectWidth)
+            .attr("height", rectHeight * count)
+            .attr("x", xOffset)
+            .attr("y", yOffset)
             .attr("fill", colors[color])
             .attr("class", `${color} ${letter}`)
             .on("mouseover", function() {
                 var color = this.classList[0];
                 var letter = this.classList[1];
-                var percent = ((letter_color_counts[letter][color] / num_ids) * 100).toFixed(2) + '%';
-                //var tooltip_text = percent + " of " + letter + " is " + color;
-                var tooltip_text = percent + " of  synesthetes see " + letter + " as " + color;
+                var xPos = d3.event.pageX;
+                var yPos = d3.event.pageY;
+                var percent = ((letterColorCounts[letter][color] / numIDs) * 100).toFixed(2) + '%';
+                //var tooltipText = percent + " of " + letter + " is " + color;
+                var tooltipText = percent + " of  synesthetes see " + letter + " as " + color;
                 tooltip.style("opacity", .9);
-                tooltip.html(tooltip_text)
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 25) + "px");
-
-                // filter on hover
-                // d3.selectAll('rect').style('opacity',function () {
-                //     var o_color = this.classList[0];
-                //     var o_letter = this.classList[1];
-                //     return (color == o_color && letter == o_letter) ? 1.0 : 0.3;
-                // });
+                tooltip.html(tooltipText)
+                    .style("left", (xPos + 10) + "px")
+                    .style("top", (yPos - 25) + "px");
+                
             })
             .on("mousemove", function(){
                 tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
-                return
-                })
+                if(enableIDMouseOver){
+                    var yRelative = +d3.mouse(svg.node())[1];
+                    var ids = rectMap[this.getAttribute("class")].ids;
+                    var yBase = +this.getAttribute("y");
+                    var currHeight = +this.getAttribute("height");
+                    var percentage = (yRelative - yBase) / currHeight;
+                    var id = ids[Math.floor(percentage*ids.length)];
+
+                    var base = "A".charCodeAt(0);
+                    rectsOn = [];
+                    for(var i = 0; i < letters.length; i++){
+                        if(data[id] == null)// not sure why this happens, but it does
+                            break;
+
+                        var letter = String.fromCharCode(base + i);
+                        var color = classifyColor(data[id][i]);
+                        rectsOn.push(`${color} ${letter}`);
+                    }
+                    updateRects();
+                    return
+                }})
             .on("mouseout", function(d) {
-              tooltip.style("opacity", 0);
+                rectsOn = [];
+                updateRects();
+                tooltip.style("opacity", 0);
             });
-        y_offset += rect_height * count;
+        yOffset += rectHeight * count;
     })
-    y_offset = 0;
-    x_offset += rect_width + 1;
+    yOffset = 0;
+    xOffset += rectWidth + 1;
 }
 
 
-for(var i = 0; i < num_ids; i++){
+for(var i = 0; i < numIDs; i++){
     for(var j = 0; j < letters.length; j++){
         var base = "A".charCodeAt(0);
         var letter = String.fromCharCode(base + j);
@@ -482,71 +388,50 @@ for(var i = 0; i < num_ids; i++){
     }
 }
 
-/*
-rects = svg
-    .selectAll("rect")
-    .data(data)
-    .enter()
-    .append("g")
-    .selectAll("rect")
-    .data(function (d, letter) {
-        local.set(this, letter);
-        return d;})
-    .enter()
-    .append("rect")
-    .attr("x", function(d, letter){
-        return letter*rect_width;
-    })
-    .attr("y", function(d, letter){
-        var id = local.get(this);
-        return id*rect_height;
-    })
-    .attr("height", rect_height)
-    .attr("width", rect_width)
-*/
-var prev_clicked = null;
+
+var prevClicked = null;
 rects = svg.selectAll("rect")
     .on("click", function() {
-        var clicked_color = this.classList[0];
-        var load_orig = clicked_color == prev_clicked;
+        var clickedColor = this.classList[0];
+        var loadOriginal = clickedColor == prevClicked;
 
-        prev_clicked = load_orig ? null : clicked_color;
+        prevClicked = loadOriginal ? null : clickedColor;
         var clicked_count = 0;
-        var x_offset = y_offset = 0;
+        var xOffset = yOffset = 0;
         for (var letter in orderedColorbyLetter){
-            orderedColorbyLetter[letter].forEach(function(color_count){
-                var color = color_count[0];
-                var count = color_count[1];
-                if (clicked_color != color || load_orig) {
+            orderedColorbyLetter[letter].forEach(function(colorCount){
+                var color = colorCount[0];
+                var count = colorCount[1];
+                if (clickedColor != color || loadOriginal) {
                     d3.select("." + color + "." + letter)
                         .transition()
                         .duration(700)
                         .ease(d3.easeExpInOut)
-                        .attr("y", y_offset)
-                    y_offset += rect_height * count;
+                        .attr("y", yOffset)
+                    yOffset += rectHeight * count;
                 }
             })
-            if (!load_orig) {
-                d3.select("." + clicked_color + "." + letter)
+            if (!loadOriginal) {
+                d3.select("." + clickedColor + "." + letter)
                     .transition()
                     .duration(700)
                     .ease(d3.easeExpInOut)
-                    .attr("y", y_offset)
+                    .attr("y", yOffset)
             }
-            y_offset = 0;
+            yOffset = 0;
         }
     });
 
 
 
 
-var graph_labels = svg.selectAll("text")
+svg.selectAll("text")
     .data(letters)
     .enter()
     .append("text")
-    .attr("class","graph_label")
+    .attr("class","graphLabel")
     .attr("transform", function(d, i){
-        return `translate(${ i*rect_width + rect_width / 2 - 3},${total_count * rect_height + 20})`
+        return `translate(${ i*rectWidth + rectWidth / 2 - 3},${numIDs * rectHeight + 20})`
     })
     .style("font-family", "impact")
     .style("font-size", "16px")
@@ -571,10 +456,10 @@ for(var i = 0; i < letters.length; i++){
     var letter = letters[i];
     toyRects[letter] =
     svg.append("rect")
-        .attr("width",rect_width)
-        .attr("height",rect_width)
-        .attr("y",total_count * rect_height + 30)
-        .attr("x",i*rect_width)
+        .attr("width",rectWidth)
+        .attr("height",rectWidth)
+        .attr("y",numIDs * rectHeight + 30)
+        .attr("x",i*rectWidth)
         .attr("fill","white")
         .style("opacity","1");
 }
