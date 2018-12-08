@@ -260,7 +260,6 @@ function sortRects() {
     d3.selectAll(".purple").attr("fill", colors["purple"]);
     d3.selectAll(".pink").attr("fill", colors["pink"]);
 
-    // change the fill color of the letters
     svg.selectAll(".graph_label")._groups[0].forEach(function(d){
         var letter = d.innerHTML;
         var color = orderedColorbyLetter[letter][10][0];
@@ -272,6 +271,24 @@ function sortRects() {
     });
 }
 
+function restoreAllRects(){
+    rects.style("opacity","1");
+}
+
+function fadeAllRects(){
+    rects.style("opacity",".2");
+}
+
+function updateRects(){
+    if(rects_on.length == 0){
+        restoreAllRects();
+        return;
+    }
+    fadeAllRects();
+    rects_on.forEach(function(className){
+        rectMap[className].style("opacity", "1");
+    });
+}
 
 //http://bl.ocks.org/srosenthal/2770072
 //https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
@@ -282,13 +299,14 @@ function sortRects() {
 data = colorData;
 num_ids = data.length;
 num_letters = 26;
-
+rects_on = [];
+rectMap = {};
 
 var toys = d3.select("#toys"),
     toy_width = +toys.attr("width"),
     toy_height = +toys.attr("height");
 
-var div = d3.select("body").append("div")
+var tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0);
 
@@ -334,17 +352,38 @@ letters.forEach(function(letter){
 
 var x_offset = y_offset = 0;
 for (var letter in orderedColorbyLetter){
-
     orderedColorbyLetter[letter].forEach(function(color_count){
         var color = color_count[0];
         var count = color_count[1];
-        svg.append("rect")
+        rectMap[`${color} ${letter}`] = svg.append("rect")
             .attr("width", rect_width)
             .attr("height", rect_height * count)
             .attr("x", x_offset)
             .attr("y", y_offset)
             .attr("fill", colors[color])
-            .attr("class", `${color} ${letter}`);
+            .attr("class", `${color} ${letter}`)
+            .on("mouseover", function() {
+                var color = this.classList[0];
+                var letter = this.classList[1];
+                var percent = ((letter_color_counts[letter][color] / num_ids) * 100).toFixed(2) + '%';
+                var tooltip_text = percent + " of " + letter + " is " + color;
+                tooltip.style("opacity", .9);
+                tooltip.html(tooltip_text)
+                    .style("left", (d3.event.pageX + 10) + "px")
+                    .style("top", (d3.event.pageY - 25) + "px");
+
+                // filter on hover
+                // d3.selectAll('rect').style('opacity',function () {
+                //     var o_color = this.classList[0];
+                //     var o_letter = this.classList[1];
+                //     return (color == o_color && letter == o_letter) ? 1.0 : 0.3;
+                // });
+            })
+            .on("mousemove", function(){return tooltip.style("top",
+                (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");})
+            .on("mouseout", function(d) {
+              tooltip.style("opacity", 0);
+            });
         y_offset += rect_height * count;
     })
     y_offset = 0;
@@ -429,8 +468,9 @@ rects = svg
           div.style("opacity", 0);
       });
 */
+rects = svg.selectAll("rect");
 
-svg.selectAll("text")
+var graph_labels = svg.selectAll("text")
     .data(letters)
     .enter()
     .append("text")
@@ -441,9 +481,20 @@ svg.selectAll("text")
     .style("font-family", "impact")
     .style("font-size", "16px")
     .style("opacity","1")
+    .style("fill", function(d, i){
+        var letter = letters[i];
+        var color = orderedColorbyLetter[letter][10][0];
+        if(color == "white"){
+            this.setAttribute("stroke","black");
+            this.setAttribute("stroke-width","0.2px");
+        }
+        return colors[color];
+    })
     .text(function(d, i, j){
         return d;
     });
+
+
 
 var toyRects = {};
 for(var i = 0; i < letters.length; i++){
