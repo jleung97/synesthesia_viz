@@ -216,24 +216,24 @@ function orderColorArr(colorCountArr) {
     return colorCountArr;
 }
 
-function updateToyImages(){
+function updateToyImages_1(){
     if(toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off"){
         magnetsImage.style("opacity","1");
         chickaBoomImage.style("opacity","1");
         bluesCluesImage.style("opacity","1");
         return;
     }
-    if(toyImages.magnets == "on" || toyImages.magnets == "persist")
+    if(toyImages.magnets == "on" || toyImages.magnets == "show")
         magnetsImage.style("opacity","1");
     else
         magnetsImage.style("opacity",".2");
 
-    if(toyImages.bluesClues == "on" || toyImages.bluesClues == "persist")
+    if(toyImages.bluesClues == "on" || toyImages.bluesClues == "show")
         bluesCluesImage.style("opacity","1");
     else
         bluesCluesImage.style("opacity",".2");
 
-    if(toyImages.chickaBoom == "on" || toyImages.chickaBoom == "persist")
+    if(toyImages.chickaBoom == "on" || toyImages.chickaBoom == "show")
         chickaBoomImage.style("opacity","1");
     else
         chickaBoomImage.style("opacity",".2");
@@ -377,7 +377,7 @@ for (var letter in orderedColorbyLetter){
     xOffset += rectWidth + 1;
 }
 
-
+// create the rectMap data structure
 for(var i = 0; i < numIDs; i++){
     for(var j = 0; j < letters.length; j++){
         var base = "A".charCodeAt(0);
@@ -450,7 +450,7 @@ svg.selectAll("text")
     });
 
 
-
+// create rectangles below letters
 var toyRects = {};
 for(var i = 0; i < letters.length; i++){
     var letter = letters[i];
@@ -464,12 +464,32 @@ for(var i = 0; i < letters.length; i++){
         .style("opacity","1");
 }
 
+//description for what's currently moused over
 var toyDescription = toys.append("text")
     .attr("x","5")
     .attr("y","15")
     .style("font-family","Lucida Console")
     .style("font-size","18px")
     .text("Click the button!")
+
+function updateToyImages(){
+    toys.selectAll("image").style("opacity",".3");
+    var restore = true;
+    for(var image in toyImages){
+        if (toyImages[image].on || toyImages[image].show){
+            toyImages[image].img.style("opacity","1");
+            restore = false;
+        }
+    }
+    if(restore){ // nothing is selected
+        restoreAllRects();
+        toys.selectAll("image").style("opacity","1");
+        for(var letter in toyRects){
+            toyRects[letter].attr("fill","white");
+        }
+    }
+
+}
 
 var magnetsImage = toys.append("image")
     .attr('xlink:href', 'magnets.jpeg')
@@ -478,33 +498,36 @@ var magnetsImage = toys.append("image")
     .attr("width","217")
     .attr("height","150")
     .on("click",function(d){
-        if(toyImages.magnets == "persist"){
+        if(toyImages.magnets.show){ // turn off
             rects.style("opacity","1");
-            toyImages.magnets = "off";
+            toyImages.magnets.show = false;
+            toyImages.magnets.on = false;
             for(letter in toyRects){
                 toyRects[letter].attr("fill","white");
             }
-            updateToyImages();
-        }else{
+            updateToyImages_1();
+        }else{ // turn on
             rects.style("opacity",".2");
             for(var letter in magnets){
                 var color = magnets[letter];
                 svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
                 toyRects[letter].attr("fill",colors[color]);
             }
-            toyImages.magnets = "persist";
-            updateToyImages();
+            toyImages.magnets.show = true;
+            updateToyImages_1();
         }
     })
     .on("mouseout",function(d){
-        if(toyImages.magnets != "persist")
-            toyImages.magnets = "off";
-        updateToyImages();
+        if(toyImages.magnets.show == false){
+            toyImages.magnets.on = false;
+            updateToyImages();
+        }
     })
     .on("mouseover",function(d){
-        if(toyImages.magnets != "persist")
-            toyImages.magnets = "on";
-        updateToyImages();
+        if(toyImages.magnets != "show"){
+            toyImages.magnets.on = true;
+            updateToyImages();
+        }
         toyDescription.text("A popular magnet letter-set by Fisher-Price");
     });
 
@@ -516,13 +539,13 @@ var chickaBoomImage = toys.append("image")
     .attr("width","117")
     .attr("height","150")
     .on("click",function(d){
-        if(toyImages.chickaBoom == "persist"){
+        if(toyImages.chickaBoom == "show"){
             rects.style("opacity","1");
             toyImages.chickaBoom = "off";
             for(letter in toyRects){
                 toyRects[letter].attr("fill","white");
             }
-            updateToyImages();
+            updateToyImages_1();
         }else{
             rects.style("opacity",".2");
             for(var letter in chickaBoom){
@@ -530,18 +553,18 @@ var chickaBoomImage = toys.append("image")
                 svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
                 toyRects[letter].attr("fill",colors[color]);
             }
-            toyImages.chickaBoom = "persist";
+            toyImages.chickaBoom = "show";
         }
     })
     .on("mouseout",function(d){
-        if(toyImages.chickaBoom != "persist")
+        if(toyImages.chickaBoom != "show")
             toyImages.chickaBoom = "off";
-        updateToyImages();
+        updateToyImages_1();
     })
     .on("mouseover",function(d){
-        if(toyImages.chickaBoom != "persist")
+        if(toyImages.chickaBoom != "show")
             toyImages.chickaBoom = "on";
-        updateToyImages();
+        updateToyImages_1();
         toyDescription.text("Top-selling alphabet book on Amazon (November 2018)");
     });
 
@@ -552,13 +575,13 @@ var bluesCluesImage = toys.append("image")
     .attr("width","100")
     .attr("height","150")
     .on("click",function(d){
-        if(toyImages.bluesClues == "persist"){
+        if(toyImages.bluesClues == "show"){
             rects.style("opacity","1");
             toyImages.bluesClues = "off";
             for(letter in toyRects){
                 toyRects[letter].attr("fill","white");
             }
-            updateToyImages();
+            updateToyImages_1();
         }else{
             rects.style("opacity",".2");
             for(var letter in bluesClues){
@@ -566,24 +589,23 @@ var bluesCluesImage = toys.append("image")
                 svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity","1");
                 toyRects[letter].attr("fill",colors[color]);
             }
-            toyImages.bluesClues = "persist";
+            toyImages.bluesClues = "show";
         }
     })
     .on("mouseout",function(d){
-        if(toyImages.bluesClues != "persist")
+        if(toyImages.bluesClues != "show")
             toyImages.bluesClues = "off";
-        updateToyImages();
+        updateToyImages_1();
     })
     .on("mouseover",function(d){
-        if(toyImages.bluesClues != "persist")
+        if(toyImages.bluesClues != "show")
             toyImages.bluesClues = "on";
-        updateToyImages();
+        updateToyImages_1();
         toyDescription.text("\"Alphabet Train\" on Blue's Clues (S05E11 2003)");
     });
 
 
-var toyImages = {"magnets":"off",
-    "chickaBoom":"off", "bluesClues":"off"};
+var toyImages = {"magnets":{"on":false, "show":false, "img":magnetsImage}, "chickaBoom":{"on":false, "show":false, "img":chickaBoomImage}, "bluesClues":{"on":false, "show":false, "image":bluesCluesImage}};
 
 
 
