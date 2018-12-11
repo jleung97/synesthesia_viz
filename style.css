@@ -1,0 +1,52 @@
+* {
+    font-family: Palatino, "Palatino Linotype", serif;
+}
+
+#headerDiv {
+    min-height: 100vh;
+}
+
+#desc {
+    width: 45%;
+}
+
+#exploreBtn {
+    display: block;
+    border-radius: 8px;
+    background-color: #D5CFEE;
+    border: 1px solid #575656;
+    padding: 10px 24px;
+    opacity: 0.5;
+    transition: 0.3s;
+    cursor: pointer;
+    color: black;
+}
+
+#exploreBtn:hover {
+    color: white;
+    opacity: 1.0;
+}
+
+#initialGraph {
+    width: 70%;
+}
+
+#sortedDiv {
+    width: 100%;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    display: inline-block;
+    padding: 5px;
+    font: 12px sans-serif;
+    background: white;
+    border: 1px solid black;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+rect, image {
+    cursor: pointer;
+}

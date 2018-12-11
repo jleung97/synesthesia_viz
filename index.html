@@ -1,61 +1,9 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<style>
-* {
-    font-family: Palatino, "Palatino Linotype", serif;
-}
-
-#headerDiv {
-    min-height: 100vh;
-}
-
-#desc {
-    width: 45%;
-}
-
-#exploreBtn {
-    display: block;
-    border-radius: 8px;
-    background-color: #D5CFEE;
-    border: 1px solid #575656;
-    padding: 10px 24px;
-    opacity: 0.5;
-    transition: 0.3s;
-    cursor: pointer;
-    color: black;
-
-}
-
-#exploreBtn:hover {
-    color: white;
-    opacity: 1.0;
-}
-
-#initialGraph {
-    width: 70%;
-}
-
-#sortedDiv {
-    width: 100%;
-}
-
-div.tooltip {
-    position: absolute;
-    text-align: center;
-    display: inline-block;
-    padding: 5px;
-    font: 12px sans-serif;
-    background: white;
-    border: 1px solid black;
-    border-radius: 8px;
-    pointer-events: none;
-}
-
-rect, image {
-    cursor: pointer;
-}
-</style>
-
+  <head>
+      <title> Visualizing Synesthesia </title>
+      <link rel="shortcut icon" type="image/png" href="favicon.ico"/>
+  </head>
   <div id="headerDiv" align="center">
     <h1>Visualizing Grapheme-Color Synesthesia</h1>
     <h5 id="desc">Grapheme-Color synesthesia is a form dfad where jfkadljfa see jdalfdsfkj color ,jsfkljadkfljasd fasdmore words   jsj sktuff here krjekj. Below is the blah blah explain what that block is maybe</h5>
@@ -73,12 +21,12 @@ rect, image {
   <div id="sortedDiv" align="center">
     <h2 align="center">Let's sort by color frequency!</h2>
     <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg>
-    <!--<button display="block" clear="both" position="relative" left="5%" onclick="sortRects()">Click me</button>-->
     <svg id='toys' width="500" height="600" float="right"></svg>
   </div>
   <br>
   <!-- <svg id='sorted' width="600" height="400"></svg> -->
 
+<link rel="stylesheet" href="style.css">
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/d3.v4.min.js"></script>
 <script lang="javascript" src="data/synesthesia.js"></script>
@@ -341,7 +289,7 @@ for (var letter in orderedColorbyLetter){
                 tooltip.html(tooltipText)
                     .style("left", (xPos + 10) + "px")
                     .style("top", (yPos - 25) + "px");
-                
+
             })
             .on("mousemove", function(){
                 tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
@@ -422,16 +370,13 @@ rects = svg.selectAll("rect")
         }
     });
 
-
-
-
 svg.selectAll("text")
     .data(letters)
     .enter()
     .append("text")
     .attr("class","graphLabel")
     .attr("transform", function(d, i){
-        return `translate(${ i*rectWidth + rectWidth / 2 - 3},${numIDs * rectHeight + 20})`
+        return `translate(${ i*rectWidth + i + rectWidth / 2 - 3},${numIDs * rectHeight + 20})`
     })
     .style("font-family", "impact")
     .style("font-size", "16px")
@@ -459,7 +404,7 @@ for(var i = 0; i < letters.length; i++){
         .attr("width",rectWidth)
         .attr("height",rectWidth)
         .attr("y",numIDs * rectHeight + 30)
-        .attr("x",i*rectWidth)
+        .attr("x",i*rectWidth + i)
         .attr("fill","white")
         .style("opacity","1");
 }
