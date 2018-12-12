@@ -24,12 +24,12 @@
     <button value="indiv" onclick="toggleView(this.value)">Individual</button>
     <button value="env" onclick="toggleView(this.value)">Environment</button>
     <h2 align="center">Let's sort by color frequency!</h2>
-    <svg id='unsorted' width="800" height="600" margin-bottom="20px"></svg>
+    <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg>
     <!-- <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg> -->
     <table id="graphLabels" cellspacing="0">
         <tr id="labelRow"></tr>
     </table>
-    <svg id='toys' width="500" height="600" float="right"></svg>
+    <svg id='toys' width="200" height="500" float="left"></svg>
   </div>
   <br>
   <!-- <svg id='sorted' width="600" height="400"></svg> -->
@@ -263,6 +263,7 @@ var colors = {
 
 
 // draw the sorted rectangles onto svg
+var persistRects = false;
 var xOffset = yOffset = 0;
 for (var letter in orderedColorbyLetter){
     orderedColorbyLetter[letter].forEach(function(colorCount){
@@ -290,35 +291,38 @@ for (var letter in orderedColorbyLetter){
                 tooltip.html(tooltipText)
                     .style("left", (xPos + 10) + "px")
                     .style("top", (yPos - 25) + "px");
-
             })
             .on("mousemove", function() {
                 tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
                 if(enableIDMouseOver){
-                    var yRelative = +d3.mouse(svg.node())[1];
-                    var ids = rectMap[this.getAttribute("class")].ids;
-                    var yBase = +this.getAttribute("y");
-                    var currHeight = +this.getAttribute("height");
-                    var percentage = (yRelative - yBase) / currHeight;
-                    var id = ids[Math.floor(percentage*ids.length)];
+                    if(!persistRects){
+                        var yRelative = +d3.mouse(svg.node())[1];
+                        var ids = rectMap[this.getAttribute("class")].ids;
+                        var yBase = +this.getAttribute("y");
+                        var currHeight = +this.getAttribute("height");
+                        var numIDsToShow = Math.ceil(currHeight / (height / 30));
+                        var percentage = (yRelative - yBase) / currHeight;
+                        var id = ids[Math.floor(percentage*numIDsToShow)];
 
-                    var base = "A".charCodeAt(0);
-                    rectsOn = [];
-                    for(var i = 0; i < letters.length; i++){
-                        if(data[id] == null)// not sure why this happens, but it does
-                            break;
+                        var base = "A".charCodeAt(0);
+                        rectsOn = [];
+                        for(var i = 0; i < letters.length; i++){
+                            if(data[id] == null)// not sure why this happens, but it does
+                                break;
 
-                        var letter = String.fromCharCode(base + i);
-                        var color = classifyColor(data[id][i]);
-                        rectsOn.push(`${color} ${letter}`);
+                            var letter = String.fromCharCode(base + i);
+                            var color = classifyColor(data[id][i]);
+                            rectsOn.push(`${color} ${letter}`);
+                        }
+                        updateRects();
                     }
-                    updateRects();
-                    return
                 }})
             .on("mouseout", function(d) {
-                rectsOn = [];
-                updateRects();
-                tooltip.style("opacity", 0);
+                if(!persistRects){
+                    rectsOn = [];
+                    updateRects();
+                    tooltip.style("opacity", 0);
+                }
             });
         yOffset += rectHeight * count;
     })
@@ -370,6 +374,8 @@ rects = svg.selectAll("rect")
                 }
                 yOffset = 0;
             }
+        }else if(enableIDMouseOver){
+            persistRects = persistRects ? false : true;
         }
     });
 
