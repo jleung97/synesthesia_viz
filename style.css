@@ -2,14 +2,18 @@
     font-family: Palatino, "Palatino Linotype", serif;
 }
 
-#unsorted {
+#toys {
     -webkit-transition:1s;
 }
 
 .move-left {
     /* left:-600px;
     position: relative; */
-    margin-right: 600px;
+    /* margin-left: 600px; */
+ }
+
+ .shrink {
+     width: 0;
  }
 
 #headerDiv {
