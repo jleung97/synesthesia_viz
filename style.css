@@ -2,6 +2,16 @@
     font-family: Palatino, "Palatino Linotype", serif;
 }
 
+#unsorted {
+    -webkit-transition:1s;
+}
+
+.move-left {
+    /* left:-600px;
+    position: relative; */
+    margin-right: 600px;
+ }
+
 #headerDiv {
     min-height: 100vh;
 }
@@ -10,8 +20,8 @@
     width: 45%;
 }
 
-#exploreBtn {
-    display: block;
+button {
+    display: inline-block;
     border-radius: 8px;
     background-color: #D5CFEE;
     border: 1px solid #575656;
@@ -22,7 +32,11 @@
     color: black;
 }
 
-#exploreBtn:hover {
+#exploreBtn {
+    display: block;
+}
+
+button:hover {
     color: white;
     opacity: 1.0;
 }
@@ -49,4 +63,25 @@ div.tooltip {
 
 rect, image {
     cursor: pointer;
+}
+
+table {
+    border-spacing: 1px;
+    table-layout: fixed;
+    margin: 0;
+    padding: 0;
+}
+tr {
+    margin: 0;
+    padding: 0;
+}
+td {
+    margin: 0;
+    padding: 0;
+    font-family: "impact";
+    font-size: 16px;
+    text-align: center;
+    z-index: 1;
+    /* border: 1px solid black; */
+    /* width: 29px; */
 }

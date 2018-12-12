@@ -19,8 +19,16 @@
   </div>
 
   <div id="sortedDiv" align="center">
+
+    <button value="color" onclick="toggleView(this.value)">Color</button>
+    <button value="indiv" onclick="toggleView(this.value)">Individual</button>
+    <button value="env" onclick="toggleView(this.value)">Environment</button>
     <h2 align="center">Let's sort by color frequency!</h2>
-    <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg>
+    <svg id='unsorted' width="800" height="600" margin-bottom="20px"></svg>
+    <!-- <svg id='unsorted' width="800" height="600" margin-bottom="20px" float="left"></svg> -->
+    <table id="graphLabels" cellspacing="0">
+        <tr id="labelRow"></tr>
+    </table>
     <svg id='toys' width="500" height="600" float="right"></svg>
   </div>
   <br>
@@ -150,13 +158,6 @@ function orderColor() {
         colorCountList = orderColorArr(colorCountList);
         orderedColorbyLetter[letters[i]] = colorCountList;
     }
-    // console.log("after");
-    // for (var i = 0; i < Object.keys(orderedColorbyLetter).length; i++) {
-    //     for (var j = 0; j < letters.length; j++) {
-    //         var thing = orderedColorbyLetter[letters[i]];
-    //         console.log(thing[j]);// + ", " + orderedColorbyLetter[letters[i]][j][1]);
-    //     }
-    // }
 }
 
 function orderColorArr(colorCountArr) {
@@ -291,7 +292,7 @@ for (var letter in orderedColorbyLetter){
                     .style("top", (yPos - 25) + "px");
 
             })
-            .on("mousemove", function(){
+            .on("mousemove", function() {
                 tooltip.style("top", (d3.event.pageY-10)+"px").style("left",(d3.event.pageX+10)+"px");
                 if(enableIDMouseOver){
                     var yRelative = +d3.mouse(svg.node())[1];
@@ -340,35 +341,51 @@ for(var i = 0; i < numIDs; i++){
 var prevClicked = null;
 rects = svg.selectAll("rect")
     .on("click", function() {
-        var clickedColor = this.classList[0];
-        var loadOriginal = clickedColor == prevClicked;
+        if (curr_view == "color") {
+            var clickedColor = this.classList[0];
+            var loadOriginal = clickedColor == prevClicked;
 
-        prevClicked = loadOriginal ? null : clickedColor;
-        var clicked_count = 0;
-        var xOffset = yOffset = 0;
-        for (var letter in orderedColorbyLetter){
-            orderedColorbyLetter[letter].forEach(function(colorCount){
-                var color = colorCount[0];
-                var count = colorCount[1];
-                if (clickedColor != color || loadOriginal) {
-                    d3.select("." + color + "." + letter)
+            prevClicked = loadOriginal ? null : clickedColor;
+            var clicked_count = 0;
+            var xOffset = yOffset = 0;
+            for (var letter in orderedColorbyLetter){
+                orderedColorbyLetter[letter].forEach(function(colorCount){
+                    var color = colorCount[0];
+                    var count = colorCount[1];
+                    if (clickedColor != color || loadOriginal) {
+                        d3.select("." + color + "." + letter)
+                            .transition()
+                            .duration(700)
+                            .ease(d3.easeExpInOut)
+                            .attr("y", yOffset)
+                        yOffset += rectHeight * count;
+                    }
+                })
+                if (!loadOriginal) {
+                    d3.select("." + clickedColor + "." + letter)
                         .transition()
                         .duration(700)
                         .ease(d3.easeExpInOut)
                         .attr("y", yOffset)
-                    yOffset += rectHeight * count;
                 }
-            })
-            if (!loadOriginal) {
-                d3.select("." + clickedColor + "." + letter)
-                    .transition()
-                    .duration(700)
-                    .ease(d3.easeExpInOut)
-                    .attr("y", yOffset)
+                yOffset = 0;
             }
-            yOffset = 0;
         }
     });
+
+
+// function generate_label_html() {
+//     var html_string = '';
+//     for (var i = 0; i < letters.length; i++) {
+//         var letter = letters[i];
+//         var color = orderedColorbyLetter[letter][10][0];
+//         html_string += "<td width='" + rectWidth + "'>" + letter + "</td>"
+//     }
+//     console.log(html_string)
+//     return html_string;
+// }
+// $("#labelRow").append(generate_label_html);
+//
 
 svg.selectAll("text")
     .data(letters)
@@ -376,6 +393,9 @@ svg.selectAll("text")
     .append("text")
     .attr("class","graphLabel")
     .attr("transform", function(d, i){
+        if (letters[i] == 'W' || letters[i] == 'M') {
+            return `translate(${ i*rectWidth + i + rectWidth / 2 - 6},${numIDs * rectHeight + 20})`
+        }
         return `translate(${ i*rectWidth + i + rectWidth / 2 - 3},${numIDs * rectHeight + 20})`
     })
     .style("font-family", "impact")
@@ -395,6 +415,51 @@ svg.selectAll("text")
     });
 
 
+function resetViz() {
+    var xOffset = yOffset = 0;
+    for (var letter in orderedColorbyLetter){
+        orderedColorbyLetter[letter].forEach(function(colorCount){
+            var color = colorCount[0];
+            var count = colorCount[1];
+            d3.select("." + color + "." + letter)
+                .transition()
+                .duration(700)
+                .ease(d3.easeExpInOut)
+                .attr("y", yOffset)
+            yOffset += rectHeight * count;
+        })
+        yOffset = 0;
+    }
+}
+
+
+var curr_view = 'color';
+toys.attr("display", "none");
+
+function toggleView(view) {
+    if (view != curr_view) {
+        resetViz();
+        enableIDMouseOver = (view == 'indiv');
+        var svg_container = document.getElementById("unsorted");
+        if (view == 'env') {
+            svg_container.classList.toggle("move-left")
+            toys.attr("display", "show");
+            svg.style("align", "none");
+                // .style("float", "left");
+        } else {
+            toys.attr("display", "none");
+            svg.style("align", "center")
+                // .style("float", "none");
+        }
+        
+        if (curr_view == 'env') {
+            svg_container.classList.toggle("move-left")
+        }
+
+        curr_view = view;
+
+    }
+}
 
 var toyRects = {};
 for(var i = 0; i < letters.length; i++){
