@@ -38,6 +38,7 @@ button:hover {
 
 #initialGraph {
     width: 70%;
+    height: 65vh;
 }
 
 #sortedDiv {
