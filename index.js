@@ -234,6 +234,10 @@ var colors = {
     "purple": "purple",
     "pink": "pink"
 };
+var slider = document.getElementById("myRange");
+var sliderVal = document.getElementById("sliderVal");
+var currID = 0;
+sliderVal.innerHTML = "ID: " + slider.value; // Display the default slider value
 
 
 // draw the sorted rectangles onto svg
@@ -277,6 +281,7 @@ for (var letter in orderedColorbyLetter) {
                         var numIDsToShow = Math.ceil(currHeight / (height / 30));
                         var percentage = (yRelative - yBase) / currHeight;
                         var id = ids[Math.floor(percentage*numIDsToShow)];
+                        currID = id;
                         var base = "A".charCodeAt(0);
                         rectsOn = [];
                         for(var i = 0; i < letters.length; i++){
@@ -294,17 +299,9 @@ for (var letter in orderedColorbyLetter) {
                 if(!persistRects){
                     rectsOn = [];
                     updateRects();
-                    tooltip.style("opacity", 0);
                 }
-            })
-            .on("click", function() {
-                if (!enableIDMouseOver) {
-                    alert("updating");
-                    d3.selectAll("rects").style("opacity", "1");
-                }
-                console.log("??");
+                tooltip.style("opacity", 0);
 
-                enableIDMouseOver = !enableIDMouseOver;
             });
         yOffset += rectHeight * count;
     })
@@ -356,7 +353,13 @@ rects = svg.selectAll("rect")
                 yOffset = 0;
             }
         } else if(enableIDMouseOver){
-        persistRects = persistRects ? false : true;
+            if (persistRects) {
+                rectsOn = []
+                updateRects();
+            }
+            persistRects = !persistRects;
+            slider.value = currID;
+            sliderVal.innerHTML = "ID: " + currID;
         }
     });
 
@@ -413,7 +416,9 @@ function resetViz() {
                 .duration(700)
                 .ease(d3.easeExpInOut)
                 .attr("y", yOffset)
-                .style("opacity", "1");
+                .style("opacity", "1")
+                .style("stroke", "none")
+                .style("stroke-width", "none");
             yOffset += rectHeight * count;
         })
         yOffset = 0;
@@ -422,29 +427,23 @@ function resetViz() {
 
 
 var curr_view = 'color';
-// toys.attr("display", "none");
-
+slider.style.display = "none";
+sliderVal.style.display = "none";
 function toggleView(view) {
     if (view != curr_view) {
         resetViz();
         enableIDMouseOver = (view == 'indiv');
         var svg_container = document.getElementById("unsorted");
-        if (view == 'env') {
-            // svg_container.classList.toggle("move-left")
-            // $('#toys').slideLeft('slow', function() {})
-            $('#toys').removeClass('shrink')
-                // toys.attr("display", "show");
-                // svg.style("align", "none");
-                // .style("float", "left");
-        } else {
-            $('#toys').addClass('shrink')
-                // toys.attr("display", "none");
-                // svg.style("align", "center")
-                // .style("float", "none");
-        }
 
-        if (curr_view == 'env') {
-            svg_container.classList.toggle("move-left")
+        $('#toys').addClass('shrink');
+        slider.style.display = "none";
+        sliderVal.style.display = "none";
+
+        if (view == 'env') {
+            $('#toys').removeClass('shrink')
+        } else if (view == 'indiv') {
+            slider.style.display = "block";
+            sliderVal.style.display = "block";
         }
         curr_view = view;
     }
@@ -586,3 +585,24 @@ var toyImages = {
     "chickaBoom": "off",
     "bluesClues": "off"
 };
+
+
+
+// Update the current slider value (each time you drag the slider handle)
+slider.oninput = function() {
+    sliderVal.innerHTML = "ID: " + this.value;
+    if (curr_view == 'indiv') {
+        var id = this.value;
+        var base = "A".charCodeAt(0);
+        rectsOn = [];
+        for (var i = 0; i < letters.length; i++){
+            if(data[id] == null)// not sure why this happens, but it does
+                break;
+            var letter = String.fromCharCode(base + i);
+            var color = classifyColor(data[id][i]);
+            rectsOn.push(`${color} ${letter}`);
+        }
+        updateRects();
+        persistRects = true;
+    }
+}
