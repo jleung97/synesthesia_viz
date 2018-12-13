@@ -260,7 +260,7 @@ var colors = {
     "purple":"purple",
     "pink":"pink"
 };
-
+var graphOffset = 200;
 
 // draw the sorted rectangles onto svg
 var persistRects = false;
@@ -449,7 +449,13 @@ function toggleView(view) {
         enableIDMouseOver = (view == 'indiv');
         var svg_container = document.getElementById("unsorted");
         if (view == 'env') {
-            svg_container.classList.toggle("move-left")
+            //svg_container.classList.toggle("move-left")
+            svg.transition()
+                .duration(1500)
+                .attr("x",function(){
+                    return +this.getAttribute("x") - graphOffset;
+                })
+
             toys.attr("display", "show");
             svg.style("align", "none");
                 // .style("float", "left");
@@ -460,7 +466,7 @@ function toggleView(view) {
         }
         
         if (curr_view == 'env') {
-            svg_container.classList.toggle("move-left")
+            //svg_container.classList.toggle("move-left")
         }
 
         curr_view = view;
