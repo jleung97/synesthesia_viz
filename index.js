@@ -170,14 +170,9 @@ function updateRects() {
     }
     fadeAllRects();
     rectsOn.forEach(function(className) {
-        if (className.split(" ")[0] == "white") {
-            rectMap[className].rect
-                .style("opacity", "1")
-                .style("stroke", "black")
-                .style("stroke-width", 1);
-        } else {
-            rectMap[className].rect.style("opacity", "1");
-        }
+        rectMap[className].rect.style("opacity", "1")
+            .style("stroke", "black")
+            .style("stroke-width", 1);
     });
 }
 
@@ -280,7 +275,11 @@ for (var letter in orderedColorbyLetter) {
                         var currHeight = +this.getAttribute("height");
                         var numIDsToShow = Math.ceil(currHeight / (height / 30));
                         var percentage = (yRelative - yBase) / currHeight;
-                        var id = ids[Math.floor(percentage*numIDsToShow)];
+                        var min = 8;
+                        var max = 15;
+                        var roundTo = max - (numIDsToShow - min);
+                        var id = Math.round(percentage*100 / roundTo) * roundTo / 100;
+                        var id = ids[Math.min(Math.floor(id * ids.length), ids.length - 1)];
                         currID = id;
                         var base = "A".charCodeAt(0);
                         rectsOn = [];
