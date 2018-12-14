@@ -222,18 +222,19 @@ var letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K",
     "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"
 ];
 var colors = {
-    "white": "white",
-    "black": "black",
+    "white": "#FFF5F0",
+    "black": "#252525",
     "gray": "gray",
-    "red": "red",
-    "orange": "orange",
-    "yellow": "yellow",
-    "green": "green",
-    "cyan": "cyan",
-    "blue": "blue",
-    "purple": "purple",
-    "pink": "pink"
+    "red": "#BD0026",
+    "orange": "#fc5e03",
+    "yellow": "#FEC44F",
+    "green": "#006837",
+    "cyan": "#4EB3D3",
+    "blue": "#253494",
+    "purple": "#3F007D",
+    "pink": "#980043"
 };
+
 var slider = document.getElementById("myRange");
 var sliderVal = document.getElementById("sliderVal");
 var currID = 0;
@@ -444,6 +445,8 @@ var curr_view = 'color';
 // sliderVal.style.display = "none";
 slider.style.opacity = "0";
 sliderVal.style.opacity = "0";
+$("#myRange").attr("disabled", "disabled");
+
 function toggleView(view) {
     if (view != curr_view) {
         resetViz();
@@ -460,10 +463,14 @@ function toggleView(view) {
         var desc = document.getElementById("btnHelp");
         if (view == "color") {
             desc.innerText = "Explore by color frequency!";
+            $("#myRange").attr("disabled", "disabled");
+
         } else if (view == "indiv") {
             desc.innerText = "Explore by individuals' grapheme-color associations!";
+            $("#myRange").removeAttr("disabled");
         } else if (view == "env") {
             desc.innerText = "Explore by environmental factors!";
+            $("#myRange").attr("disabled", "disabled");
         }
 
         if (view == "indiv") {
@@ -748,20 +755,22 @@ slider.onmouseup = function() {
 document.onkeydown = function(e) {
     var id;
     // up or right
-    if (e.keyCode == '38' || e.keyCode == '39') {
-        id = +slider.value + 1;
-    }
-    // left or down
-    else if (e.keyCode == '40' || e.keyCode == '37') {
-        id = +slider.value - 1;
+    if (curr_view == 'indiv') {
+        if (e.keyCode == '38' || e.keyCode == '39') {
+            id = +slider.value + 1;
+        }
+        // left or down
+        else if (e.keyCode == '40' || e.keyCode == '37') {
+            id = +slider.value - 1;
 
-    }
+        }
 
-    for (var i = 0; i < letters.length; i++){
-        if(data[id] == null)// not sure why this happens, but it does
-            break;
-        var letter = letters[i];
-        var color = classifyColor(data[id][i]);
-        toyRects[letter].attr("fill", colors[color]);
+        for (var i = 0; i < letters.length; i++){
+            if(data[id] == null)// not sure why this happens, but it does
+                break;
+            var letter = letters[i];
+            var color = classifyColor(data[id][i]);
+            toyRects[letter].attr("fill", colors[color]);
+        }
     }
 }
