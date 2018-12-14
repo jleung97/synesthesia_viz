@@ -237,7 +237,7 @@ var colors = {
 var slider = document.getElementById("myRange");
 var sliderVal = document.getElementById("sliderVal");
 var currID = 0;
-sliderVal.innerHTML = "ID: " + slider.value; // Display the default slider value
+sliderVal.innerHTML = "Synesthete ID: " + slider.value; // Display the default slider value
 
 
 // draw the sorted rectangles onto svg
@@ -361,10 +361,21 @@ rects = svg.selectAll("rect")
             if (persistRects) {
                 rectsOn = []
                 updateRects();
+                for (letter in toyRects) {
+                    toyRects[letter].attr("fill", "white");
+                }
             }
             persistRects = !persistRects;
             slider.value = currID;
-            sliderVal.innerHTML = "ID: " + currID;
+            sliderVal.innerHTML = "Synesthete ID: " + currID;
+            for (var i = 0; i < letters.length; i++){
+                var id = slider.value;
+                if(data[id] == null)// not sure why this happens, but it does
+                    break;
+                var letter = letters[i];
+                var color = classifyColor(data[id][i]);
+                toyRects[letter].attr("fill", colors[color]);
+            }
         }
     });
 
@@ -427,6 +438,9 @@ function resetViz() {
             yOffset += rectHeight * count;
         })
         yOffset = 0;
+    }
+    for (letter in toyRects) {
+        toyRects[letter].attr("fill", "white");
     }
 }
 
@@ -672,7 +686,7 @@ var toyImages = {
 
 // Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
-    sliderVal.innerHTML = "ID: " + this.value;
+    sliderVal.innerHTML = "Synesthete ID: " + this.value;
     if (curr_view == 'indiv') {
         var id = this.value;
         var base = "A".charCodeAt(0);
@@ -686,5 +700,16 @@ slider.oninput = function() {
         }
         updateRects();
         persistRects = true;
+    }
+}
+
+slider.onmouseup = function() {
+    for (var i = 0; i < letters.length; i++){
+        var id = this.value;
+        if(data[id] == null)// not sure why this happens, but it does
+            break;
+        var letter = letters[i];
+        var color = classifyColor(data[id][i]);
+        toyRects[letter].attr("fill", colors[color]);
     }
 }

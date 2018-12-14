@@ -6,13 +6,6 @@
     -webkit-transition:1s;
 }
 
-
-.move-left {
-    /*left:-600px;
-    position: relative; */
-    /* margin-left: 600px; */
- }
-
  .shrink {
      width: 0;
  }
@@ -61,6 +54,12 @@ button:hover {
     width: 100%;
 }
 
+#sliderVal {
+    border: 1px solid black;
+    width: 150px;
+    padding: 5px;
+}
+
 div.tooltip {
     position: absolute;
     text-align: center;
@@ -105,7 +104,7 @@ td {
   border-radius: 20px;
   background: black;
   outline: none;
-  /* opacity: 0.7; */
+  margin-top: 10px;
   -webkit-transition: .2s;
   transition: opacity .2s;
 }
@@ -126,8 +125,4 @@ td {
   border: 0;
   background: url('slider_image.png');
   cursor: pointer;
-}
-
-.shrink {
-    width: 0;
 }
