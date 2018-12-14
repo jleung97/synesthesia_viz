@@ -456,8 +456,10 @@ function resetViz() {
 
 
 var curr_view = 'color';
-slider.style.display = "none";
-sliderVal.style.display = "none";
+// slider.style.display = "none";
+// sliderVal.style.display = "none";
+slider.style.opacity = "0";
+sliderVal.style.opacity = "0";
 function toggleView(view) {
     if (view != curr_view) {
         resetViz();
@@ -480,12 +482,20 @@ function toggleView(view) {
             desc.innerText = "Explore by environmental factors!";
         }
 
+        if (view == "indiv") {
+            slider.style.opacity = "1.0";
+            sliderVal.style.opacity = "1.0";
+        } else {
+            slider.style.opacity = "0";
+            sliderVal.style.opacity = "0";
+        }
+
         enableIDMouseOver = (view == 'indiv');
         var svg_container = document.getElementById("unsorted");
 
         $('#toys').addClass('shrink');
-        slider.style.display = "none";
-        sliderVal.style.display = "none";
+        // slider.style.display = "none";
+        // sliderVal.style.display = "none";
 
         if (view == 'env') {
             $('#toys').removeClass('shrink')
@@ -663,11 +673,12 @@ var bluesCluesImage = toys.append("image")
     });
 
 var crayonsImage = toys.append("image")
-    .attr('xlink:href', 'crayons.jpeg')
+    // .attr('xlink:href', 'crayons.jpeg')
+    .attr('xlink:href', 'crayola.jpg')
     .attr("x", "280")
     .attr("y", "220")
-    .attr("width", "100")
-    .attr("height", "150")
+    .attr("width", "120")
+    .attr("height", "120")
     .on("click", function(d) {
         if (toyImages.crayons == "persist") {
             console.log("crayon turned off")
