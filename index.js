@@ -232,7 +232,7 @@ var colors = {
     "cyan": "#4EB3D3",
     "blue": "#253494",
     "purple": "#3F007D",
-    "pink": "#980043"
+    "pink": "#f071c4"
 };
 
 var slider = document.getElementById("myRange");
@@ -441,8 +441,6 @@ function resetViz() {
 
 
 var curr_view = 'color';
-// slider.style.display = "none";
-// sliderVal.style.display = "none";
 slider.style.opacity = "0";
 sliderVal.style.opacity = "0";
 $("#myRange").attr("disabled", "disabled");
