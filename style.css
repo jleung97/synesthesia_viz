@@ -26,6 +26,10 @@ button {
     color: black;
 }
 
+.toggleBtn {
+    margin: 5px;
+}
+
 #exploreBtn {
     display: block;
 }
