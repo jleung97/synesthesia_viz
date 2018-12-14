@@ -128,7 +128,9 @@ function orderColorArr(colorCountArr) {
 }
 
 function updateToyImages() {
+    console.log('ehh')
     if (toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off" && toyImages.crayons == "off") {
+console.log("off1!")
         magnetsImage.style("opacity", "1");
         chickaBoomImage.style("opacity", "1");
         bluesCluesImage.style("opacity", "1");
@@ -303,10 +305,10 @@ for (var letter in orderedColorbyLetter) {
                     if(!persistRects && curr_view != "env"){
                         rectsOn = [];
                         updateRects();
-                        
+
                     }
                     tooltip.style("opacity", 0);
-                
+
             });
         yOffset += rectHeight * count;
     })
@@ -442,6 +444,14 @@ function resetViz() {
     for (letter in toyRects) {
         toyRects[letter].attr("fill", "white");
     }
+
+    toyDescription.text("Pick an item!");
+    toyImages.magnets = "off";
+    toyImages.bluesClues = "off";
+    toyImages.chickaBoom = "off";
+    toyImages.crayons = "off";
+    updateToyImages();
+
 }
 
 
@@ -517,17 +527,23 @@ var magnetsImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.magnets == "persist") {
-            rects.style("opacity", "1");
+            console.log("magnet turned off")
+            rects.style("opacity", "1")
+                .style("stroke", "none")
+                .style("stroke-width", "none");
             toyImages.magnets = "off";
             for (letter in toyRects) {
                 toyRects[letter].attr("fill", "white");
             }
             updateToyImages();
         } else {
-            rects.style("opacity", ".2");
+            rects.style("opacity", ".2").style("stroke", "none").style("stroke-width", "none");
             for (var letter in magnets) {
                 var color = magnets[letter];
-                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
+                svg.selectAll(`.${letter}`).filter(`.${color}`)
+                .style("opacity", "1")
+                .style("stroke", "black")
+                .style("stroke", "1");
                 toyRects[letter].attr("fill", colors[color]);
             }
             toyImages.bluesClues = "off";
@@ -559,17 +575,24 @@ var chickaBoomImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.chickaBoom == "persist") {
-            rects.style("opacity", "1");
+            console.log("chick turned off")
+
+            rects.style("opacity", "1")
+                .style("stroke", "none")
+                .style("stroke-width", "none");
             toyImages.chickaBoom = "off";
             for (letter in toyRects) {
                 toyRects[letter].attr("fill", "white");
             }
             updateToyImages();
         } else {
-            rects.style("opacity", ".2");
+            rects.style("opacity", ".2").style("stroke", "none").style("stroke-width", "none");
             for (var letter in chickaBoom) {
                 var color = chickaBoom[letter];
-                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
+                svg.selectAll(`.${letter}`).filter(`.${color}`)
+                .style("opacity", "1")
+                .style("stroke", "black")
+                .style("stroke", "1");
                 toyRects[letter].attr("fill", colors[color]);
             }
             toyImages.bluesClues = "off";
@@ -600,17 +623,24 @@ var bluesCluesImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.bluesClues == "persist") {
-            rects.style("opacity", "1");
+            console.log("blues turned off")
+
+            rects.style("opacity", "1")
+                .style("stroke", "none")
+                .style("stroke-width", "none");
             toyImages.bluesClues = "off";
             for (letter in toyRects) {
                 toyRects[letter].attr("fill", "white");
             }
             updateToyImages();
         } else {
-            rects.style("opacity", ".2");
+            rects.style("opacity", ".2").style("stroke", "none").style("stroke-width", "none");
             for (var letter in bluesClues) {
                 var color = bluesClues[letter];
-                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
+                svg.selectAll(`.${letter}`).filter(`.${color}`)
+                .style("opacity", "1")
+                .style("stroke", "black")
+                .style("stroke", "1");
                 toyRects[letter].attr("fill", colors[color]);
             }
             toyImages.bluesClues = "persist";
@@ -640,7 +670,11 @@ var crayonsImage = toys.append("image")
     .attr("height", "150")
     .on("click", function(d) {
         if (toyImages.crayons == "persist") {
-            rects.style("opacity", "1");
+            console.log("crayon turned off")
+
+            rects.style("opacity", "1")
+                .style("stroke", "none")
+                .style("stroke-width", "none");
             toyImages.crayons = "off";
             for (letter in toyRects) {
                 toyRects[letter].attr("fill", "white");
@@ -650,18 +684,18 @@ var crayonsImage = toys.append("image")
             for (letter in toyRects) {
                 toyRects[letter].attr("fill", "white");
             }
-            rects.style("opacity", ".2");
+            rects.style("opacity", ".2").style("stroke", "none").style("stroke-width", "none");
             for (var letter in crayons) {
                 if(letter == "B" || letter == "P"){
                     var color = crayons[letter];
                     console.log(color);
                     toyRects[letter].attr("fill", colors[color[0]]);
-                    rectMap[`${color[0]} ${letter}`].rect.style("opacity","1");
-                    rectMap[`${color[1]} ${letter}`].rect.style("opacity","1");
+                    rectMap[`${color[0]} ${letter}`].rect.style("opacity","1").style("stroke", "black").style("stroke-width", "1");
+                    rectMap[`${color[1]} ${letter}`].rect.style("opacity","1").style("stroke", "black").style("stroke-width", "1");
                 }else{
                     var color = crayons[letter];
                     toyRects[letter].attr("fill", colors[color]);
-                    rectMap[`${color} ${letter}`].rect.style("opacity","1");
+                    rectMap[`${color} ${letter}`].rect.style("opacity","1").style("stroke", "black").style("stroke-width", "1");
                 }
             }
             toyImages.bluesClues = "off";
@@ -680,7 +714,7 @@ var crayonsImage = toys.append("image")
         if (toyImages.crayons != "persist")
             toyImages.crayons = "on";
         updateToyImages();
-        toyDescription.text("Standard 8-color Crayon pack by Crayola");
+        toyDescription.text("Crayola Crayons (B for Blue!)");
     });
 
 
