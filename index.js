@@ -436,6 +436,16 @@ sliderVal.style.display = "none";
 function toggleView(view) {
     if (view != curr_view) {
         resetViz();
+
+        var btns = document.getElementsByClassName("toggleBtn");
+        for (var i = 0; i < btns.length; i++) {
+            btns[i].style.color = "black";
+            btns[i].style.opacity = "0.5";
+        }
+        var btn = document.getElementById(view);
+        btn.style.color = "white";
+        btn.style.opacity = "1.0";
+
         enableIDMouseOver = (view == 'indiv');
         var svg_container = document.getElementById("unsorted");
 
@@ -467,18 +477,20 @@ for (var i = 0; i < letters.length; i++) {
 }
 
 var toyDescription = toys.append("text")
-    .attr("x", "5")
-    .attr("y", "15")
-    .style("font-family", "Lucida Console")
-    .style("font-size", "18px")
-    .text("Click the button!")
+    .attr("x", "100")
+    .attr("y", "25")
+    .style("font-family", "Roboto", "serif")
+    .style("font-size", "16px")
+    .text("Click a toy!");
 
 var magnetsImage = toys.append("image")
-    .attr('xlink:href', 'magnets.jpeg')
-    .attr("x", "30")
-    .attr("y", "40")
-    .attr("width", "217")
-    .attr("height", "150")
+    // .attr('xlink:href', 'magnets.jpeg')
+    .attr('xlink:href', 'fisher-price.JPG')
+    .attr("x", "100")
+    .attr("y", "65")
+    .attr("width", "120")
+    .attr("height", "120")
+    .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.magnets == "persist") {
             rects.style("opacity", "1");
@@ -510,16 +522,17 @@ var magnetsImage = toys.append("image")
         if (toyImages.magnets != "persist")
             toyImages.magnets = "on";
         updateToyImages();
-        toyDescription.text("A popular magnet letter-set by Fisher-Price");
+        toyDescription.text("Fisher-Price Magnet Set");
     });
 
 
 var chickaBoomImage = toys.append("image")
-    .attr('xlink:href', 'chickaBoom.png')
-    .attr("x", "30")
-    .attr("y", "190")
-    .attr("width", "117")
-    .attr("height", "150")
+    .attr('xlink:href', 'ccbb.jpg')
+    .attr("x", "280")
+    .attr("y", "65")
+    .attr("width", "120")
+    .attr("height", "120")
+    .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.chickaBoom == "persist") {
             rects.style("opacity", "1");
@@ -551,15 +564,16 @@ var chickaBoomImage = toys.append("image")
         if (toyImages.chickaBoom != "persist")
             toyImages.chickaBoom = "on";
         updateToyImages();
-        toyDescription.text("Top-selling alphabet book on Amazon (November 2018)");
+        toyDescription.text("\"Chicka Chicka Boom Boom\" illust. by Lois Ehlert");
     });
 
 var bluesCluesImage = toys.append("image")
-    .attr('xlink:href', 'bluesClues.jpg')
-    .attr("x", "30")
-    .attr("y", "350")
-    .attr("width", "100")
-    .attr("height", "150")
+    .attr('xlink:href', 'blueclue.jpg')
+    .attr("x", "100")
+    .attr("y", "220")
+    .attr("width", "120")
+    .attr("height", "120")
+    .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.bluesClues == "persist") {
             rects.style("opacity", "1");
@@ -591,7 +605,7 @@ var bluesCluesImage = toys.append("image")
         if (toyImages.bluesClues != "persist")
             toyImages.bluesClues = "on";
         updateToyImages();
-        toyDescription.text("\"Alphabet Train\" on Blue's Clues (S05E11 2003)");
+        toyDescription.text("\"Alphabet Train\" on Blue's Clues");
     });
 
 var crayonsImage = toys.append("image")
