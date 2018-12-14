@@ -191,7 +191,7 @@ function onBtnClick() {
 //http://bl.ocks.org/srosenthal/2770072
 //https://stackoverflow.com/questions/46629188/multidimensional-array-for-d3
 //https://zenodo.org/record/14285?fbclid=IwAR2tjoxmDO2rVjoiOopMJYaE6rd4THfhrWyGuYS_vfvOq6a5LxvcT3QFVGE
-//https://journals.plos.org/plosone/article?id=10.2371/journal.pone.0118996
+//https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0118996&
 
 
 data = colorData;
@@ -300,12 +300,13 @@ for (var letter in orderedColorbyLetter) {
                 }
             })
             .on("mouseout", function(d) {
-                if(!persistRects){
-                    rectsOn = [];
-                    updateRects();
-                }
-                tooltip.style("opacity", 0);
-
+                    if(!persistRects && curr_view != "env"){
+                        rectsOn = [];
+                        updateRects();
+                        
+                    }
+                    tooltip.style("opacity", 0);
+                
             });
         yOffset += rectHeight * count;
     })
@@ -628,7 +629,7 @@ var crayonsImage = toys.append("image")
             }
             rects.style("opacity", ".2");
             for (var letter in crayons) {
-                if(letter == "B"){
+                if(letter == "B" || letter == "P"){
                     var color = crayons[letter];
                     console.log(color);
                     toyRects[letter].attr("fill", colors[color[0]]);
