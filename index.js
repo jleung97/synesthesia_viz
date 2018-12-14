@@ -128,9 +128,7 @@ function orderColorArr(colorCountArr) {
 }
 
 function updateToyImages() {
-    console.log('ehh')
     if (toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off" && toyImages.crayons == "off") {
-console.log("off1!")
         magnetsImage.style("opacity", "1");
         chickaBoomImage.style("opacity", "1");
         bluesCluesImage.style("opacity", "1");
@@ -381,20 +379,6 @@ rects = svg.selectAll("rect")
         }
     });
 
-
-// function generate_label_html() {
-//     var html_string = '';
-//     for (var i = 0; i < letters.length; i++) {
-//         var letter = letters[i];
-//         var color = orderedColorbyLetter[letter][10][0];
-//         html_string += "<td width='" + rectWidth + "'>" + letter + "</td>"
-//     }
-//     console.log(html_string)
-//     return html_string;
-// }
-// $("#labelRow").append(generate_label_html);
-//
-
 svg.selectAll("text")
     .data(letters)
     .enter()
@@ -537,7 +521,6 @@ var magnetsImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.magnets == "persist") {
-            console.log("magnet turned off")
             rects.style("opacity", "1")
                 .style("stroke", "none")
                 .style("stroke-width", "none");
@@ -585,8 +568,6 @@ var chickaBoomImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.chickaBoom == "persist") {
-            console.log("chick turned off")
-
             rects.style("opacity", "1")
                 .style("stroke", "none")
                 .style("stroke-width", "none");
@@ -633,8 +614,6 @@ var bluesCluesImage = toys.append("image")
     .attr("align", "center")
     .on("click", function(d) {
         if (toyImages.bluesClues == "persist") {
-            console.log("blues turned off")
-
             rects.style("opacity", "1")
                 .style("stroke", "none")
                 .style("stroke-width", "none");
@@ -681,8 +660,6 @@ var crayonsImage = toys.append("image")
     .attr("height", "120")
     .on("click", function(d) {
         if (toyImages.crayons == "persist") {
-            console.log("crayon turned off")
-
             rects.style("opacity", "1")
                 .style("stroke", "none")
                 .style("stroke-width", "none");
@@ -699,7 +676,6 @@ var crayonsImage = toys.append("image")
             for (var letter in crayons) {
                 if(letter == "B" || letter == "P"){
                     var color = crayons[letter];
-                    console.log(color);
                     toyRects[letter].attr("fill", colors[color[0]]);
                     rectMap[`${color[0]} ${letter}`].rect.style("opacity","1").style("stroke", "black").style("stroke-width", "1");
                     rectMap[`${color[1]} ${letter}`].rect.style("opacity","1").style("stroke", "black").style("stroke-width", "1");
