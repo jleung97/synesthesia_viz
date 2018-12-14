@@ -743,3 +743,24 @@ slider.onmouseup = function() {
         toyRects[letter].attr("fill", colors[color]);
     }
 }
+
+document.onkeydown = function(e) {
+    var id;
+    // up or right
+    if (e.keyCode == '38' || e.keyCode == '39') {
+        id = +slider.value + 1;
+    }
+    // left or down
+    else if (e.keyCode == '40' || e.keyCode == '37') {
+        id = +slider.value - 1;
+
+    }
+
+    for (var i = 0; i < letters.length; i++){
+        if(data[id] == null)// not sure why this happens, but it does
+            break;
+        var letter = letters[i];
+        var color = classifyColor(data[id][i]);
+        toyRects[letter].attr("fill", colors[color]);
+    }
+}
