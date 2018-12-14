@@ -751,10 +751,15 @@ slider.onmouseup = function() {
     }
 }
 
+var lastElementClicked;
+$(document).click(function(event) {
+   lastElementClicked = event.target;
+});
+
 document.onkeydown = function(e) {
     var id;
     // up or right
-    if (curr_view == 'indiv') {
+    if (curr_view == 'indiv' && lastElementClicked == slider) {
         if (e.keyCode == '38' || e.keyCode == '39') {
             id = +slider.value + 1;
         }
@@ -763,7 +768,6 @@ document.onkeydown = function(e) {
             id = +slider.value - 1;
 
         }
-
         for (var i = 0; i < letters.length; i++){
             if(data[id] == null)// not sure why this happens, but it does
                 break;
@@ -771,5 +775,31 @@ document.onkeydown = function(e) {
             var color = classifyColor(data[id][i]);
             toyRects[letter].attr("fill", colors[color]);
         }
+    }
+    else if (curr_view == 'indiv') {
+        if (e.keyCode == '38' || e.keyCode == '39') {
+            id = +slider.value + 1;
+            slider.value = id;
+        }
+        // left or down
+        else if (e.keyCode == '40' || e.keyCode == '37') {
+            id = +slider.value - 1;
+            slider.value = id;
+
+        }
+        sliderVal.innerHTML = "Synesthete ID: " + id;
+        rectsOn = [];
+
+        for (var i = 0; i < letters.length; i++){
+            if(data[id] == null)// not sure why this happens, but it does
+                break;
+            var letter = letters[i];
+            var color = classifyColor(data[id][i]);
+            toyRects[letter].attr("fill", colors[color]);
+            rectsOn.push(`${color} ${letter}`);
+        }
+
+        updateRects();
+        persistRects = true;
     }
 }

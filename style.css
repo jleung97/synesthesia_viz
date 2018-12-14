@@ -86,6 +86,7 @@ div.tooltip {
   margin-top: 10px;
   -webkit-transition: .2s;
   transition: opacity .2s;
+  cursor: pointer;
 }
 
 .slider::-webkit-slider-thumb {
