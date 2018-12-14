@@ -461,6 +461,15 @@ function toggleView(view) {
         btn.style.color = "white";
         btn.style.opacity = "1.0";
 
+        var desc = document.getElementById("btnHelp");
+        if (view == "color") {
+            desc.innerText = "Explore by color frequency!";
+        } else if (view == "indiv") {
+            desc.innerText = "Explore by individuals' grapheme-color associations!";
+        } else if (view == "env") {
+            desc.innerText = "Explore by environmental factors!";
+        }
+
         enableIDMouseOver = (view == 'indiv');
         var svg_container = document.getElementById("unsorted");
 
@@ -496,7 +505,7 @@ var toyDescription = toys.append("text")
     .attr("y", "25")
     .style("font-family", "Roboto", "serif")
     .style("font-size", "16px")
-    .text("Click a toy!");
+    .text("Pick an item!");
 
 var magnetsImage = toys.append("image")
     // .attr('xlink:href', 'magnets.jpeg')
