@@ -1,8 +1,4 @@
-# synethesia_viz
+# synesthesia_viz
+## Jennifer Leung, Sophia Wang, Jeremy Su
 
-How to run:
-1) In the directory run:
-python -m SimpleHTTPServer
-
-2) Go to a browser url:
-locahost:8000/index.html
+View our project at [https://jleung97.github.io/synesthesia_viz/](https://jleung97.github.io/synesthesia_viz/)!
