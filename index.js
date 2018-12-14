@@ -610,8 +610,8 @@ var bluesCluesImage = toys.append("image")
 
 var crayonsImage = toys.append("image")
     .attr('xlink:href', 'crayons.jpeg')
-    .attr("x", "30")
-    .attr("y", "450")
+    .attr("x", "280")
+    .attr("y", "220")
     .attr("width", "100")
     .attr("height", "150")
     .on("click", function(d) {
@@ -623,11 +623,22 @@ var crayonsImage = toys.append("image")
             }
             updateToyImages();
         } else {
+            for (letter in toyRects) {
+                toyRects[letter].attr("fill", "white");
+            }
             rects.style("opacity", ".2");
             for (var letter in crayons) {
-                var color = crayons[letter];
-                svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
-                toyRects[letter].attr("fill", colors[color]);
+                if(letter == "B"){
+                    var color = crayons[letter];
+                    console.log(color);
+                    toyRects[letter].attr("fill", colors[color[0]]);
+                    rectMap[`${color[0]} ${letter}`].rect.style("opacity","1");
+                    rectMap[`${color[1]} ${letter}`].rect.style("opacity","1");
+                }else{
+                    var color = crayons[letter];
+                    toyRects[letter].attr("fill", colors[color]);
+                    rectMap[`${color} ${letter}`].rect.style("opacity","1");
+                }
             }
             toyImages.bluesClues = "off";
             toyImages.chickaBoom = "off";
