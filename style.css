@@ -6,6 +6,7 @@
     -webkit-transition:1s;
 }
 
+
 .move-left {
     /*left:-600px;
     position: relative; */
@@ -15,6 +16,7 @@
  .shrink {
      width: 0;
  }
+
 
 #headerDiv {
     min-height: 100vh;
@@ -47,6 +49,7 @@ button:hover {
 
 #initialGraph {
     width: 70%;
+    height: 65vh;
 }
 
 #sortedDiv {
@@ -68,7 +71,7 @@ div.tooltip {
 rect, image {
     cursor: pointer;
 }
-
+/*
 table {
     border-spacing: 1px;
     table-layout: fixed;
@@ -88,4 +91,38 @@ td {
     z-index: 1;
     /* border: 1px solid black; */
     /* width: 29px; */
+
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 20px;
+  background: black;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 29px;
+  border: 0;
+  background: url('slider_image.png');
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 30px;
+  height: 29px;
+  border: 0;
+  background: url('slider_image.png');
+  cursor: pointer;
+}
+
+.shrink {
+    width: 0;
 }
