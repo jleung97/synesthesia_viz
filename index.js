@@ -436,6 +436,8 @@ function resetViz() {
     toyImages.chickaBoom = "off";
     toyImages.crayons = "off";
     updateToyImages();
+    persistRects = false;
+    prevClicked = null;
 
 }
 
@@ -768,6 +770,7 @@ document.onkeydown = function(e) {
             id = +slider.value - 1;
 
         }
+        else { return; }
         for (var i = 0; i < letters.length; i++){
             if(data[id] == null)// not sure why this happens, but it does
                 break;
@@ -787,6 +790,7 @@ document.onkeydown = function(e) {
             slider.value = id;
 
         }
+        else { return; }
         sliderVal.innerHTML = "Synesthete ID: " + id;
         rectsOn = [];
 
