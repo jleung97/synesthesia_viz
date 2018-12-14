@@ -6,6 +6,18 @@
     -webkit-transition:1s;
 }
 
+
+.move-left {
+    /*left:-600px;
+    position: relative; */
+    /* margin-left: 600px; */
+ }
+
+ .shrink {
+     width: 0;
+ }
+
+
 #headerDiv {
     min-height: 100vh;
 }

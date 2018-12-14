@@ -128,10 +128,11 @@ function orderColorArr(colorCountArr) {
 }
 
 function updateToyImages() {
-    if (toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off") {
+    if (toyImages.magnets == "off" && toyImages.bluesClues == "off" && toyImages.chickaBoom == "off" && toyImages.crayons == "off") {
         magnetsImage.style("opacity", "1");
         chickaBoomImage.style("opacity", "1");
         bluesCluesImage.style("opacity", "1");
+        crayonsImage.style("opacity", "1");
         return;
     }
     if (toyImages.magnets == "on" || toyImages.magnets == "persist")
@@ -148,6 +149,10 @@ function updateToyImages() {
         chickaBoomImage.style("opacity", "1");
     else
         chickaBoomImage.style("opacity", ".2");
+    if (toyImages.crayons == "on" || toyImages.crayons == "persist")
+        crayonsImage.style("opacity", "1");
+    else
+        crayonsImage.style("opacity", ".2");
 }
 
 
@@ -501,7 +506,10 @@ var magnetsImage = toys.append("image")
                 svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
                 toyRects[letter].attr("fill", colors[color]);
             }
+            toyImages.bluesClues = "off";
+            toyImages.chickaBoom = "off";
             toyImages.magnets = "persist";
+            toyImages.crayons = "off";
             updateToyImages();
         }
     })
@@ -540,7 +548,11 @@ var chickaBoomImage = toys.append("image")
                 svg.selectAll(`.${letter}`).filter(`.${color}`).style("opacity", "1");
                 toyRects[letter].attr("fill", colors[color]);
             }
+            toyImages.bluesClues = "off";
             toyImages.chickaBoom = "persist";
+            toyImages.magnets = "off";
+            toyImages.crayons = "off";
+            updateToyImages();
         }
     })
     .on("mouseout", function(d) {
@@ -578,6 +590,10 @@ var bluesCluesImage = toys.append("image")
                 toyRects[letter].attr("fill", colors[color]);
             }
             toyImages.bluesClues = "persist";
+            toyImages.chickaBoom = "off";
+            toyImages.magnets = "off";
+            toyImages.crayons = "off";
+            updateToyImages();
         }
     })
     .on("mouseout", function(d) {
@@ -592,11 +608,63 @@ var bluesCluesImage = toys.append("image")
         toyDescription.text("\"Alphabet Train\" on Blue's Clues");
     });
 
+var crayonsImage = toys.append("image")
+    .attr('xlink:href', 'crayons.jpeg')
+    .attr("x", "280")
+    .attr("y", "220")
+    .attr("width", "100")
+    .attr("height", "150")
+    .on("click", function(d) {
+        if (toyImages.crayons == "persist") {
+            rects.style("opacity", "1");
+            toyImages.crayons = "off";
+            for (letter in toyRects) {
+                toyRects[letter].attr("fill", "white");
+            }
+            updateToyImages();
+        } else {
+            for (letter in toyRects) {
+                toyRects[letter].attr("fill", "white");
+            }
+            rects.style("opacity", ".2");
+            for (var letter in crayons) {
+                if(letter == "B"){
+                    var color = crayons[letter];
+                    console.log(color);
+                    toyRects[letter].attr("fill", colors[color[0]]);
+                    rectMap[`${color[0]} ${letter}`].rect.style("opacity","1");
+                    rectMap[`${color[1]} ${letter}`].rect.style("opacity","1");
+                }else{
+                    var color = crayons[letter];
+                    toyRects[letter].attr("fill", colors[color]);
+                    rectMap[`${color} ${letter}`].rect.style("opacity","1");
+                }
+            }
+            toyImages.bluesClues = "off";
+            toyImages.chickaBoom = "off";
+            toyImages.magnets = "off";
+            toyImages.crayons = "persist";
+            updateToyImages();
+        }
+    })
+    .on("mouseout", function(d) {
+        if (toyImages.crayons != "persist")
+            toyImages.crayons = "off";
+        updateToyImages();
+    })
+    .on("mouseover", function(d) {
+        if (toyImages.crayons != "persist")
+            toyImages.crayons = "on";
+        updateToyImages();
+        toyDescription.text("Standard 8-color Crayon pack by Crayola");
+    });
+
 
 var toyImages = {
     "magnets": "off",
     "chickaBoom": "off",
-    "bluesClues": "off"
+    "bluesClues": "off",
+    "crayons":"off"
 };
 
 
