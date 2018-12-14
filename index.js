@@ -501,6 +501,7 @@ for (var i = 0; i < letters.length; i++) {
         .attr("y", numIDs * rectHeight + 30)
         .attr("x", i * rectWidth + i)
         .attr("fill", "white")
+        .style("cursor", "default")
         .style("opacity", "1");
 }
 

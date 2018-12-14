@@ -72,7 +72,7 @@ div.tooltip {
     pointer-events: none;
 }
 
-rect, image {
+#unsorted > rect, image {
     cursor: pointer;
 }
 /*
