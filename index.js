@@ -511,8 +511,9 @@ for (var i = 0; i < letters.length; i++) {
 }
 
 var toyDescription = toys.append("text")
-    .attr("x", "100")
+    .attr("x", "250")
     .attr("y", "25")
+    .attr("text-anchor", "middle")
     .style("font-family", "Roboto", "serif")
     .style("font-size", "16px")
     .text("Pick an item!");

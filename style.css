@@ -6,10 +6,9 @@
     -webkit-transition:1s;
 }
 
- .shrink {
-     width: 0;
- }
-
+.shrink {
+    width: 0;
+}
 
 #headerDiv {
     min-height: 100vh;
