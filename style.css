@@ -58,6 +58,7 @@ button:hover {
     border: 1px solid black;
     width: 150px;
     padding: 5px;
+    cursor: default;
 }
 
 div.tooltip {
@@ -76,6 +77,7 @@ div.tooltip {
     cursor: pointer;
 }
 
+
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -86,7 +88,6 @@ div.tooltip {
   margin-top: 10px;
   -webkit-transition: .2s;
   transition: opacity .2s;
-  cursor: pointer;
 }
 
 .slider::-webkit-slider-thumb {
@@ -96,7 +97,6 @@ div.tooltip {
   height: 29px;
   border: 0;
   background: url('slider_image.png');
-  cursor: pointer;
 }
 
 .slider::-moz-range-thumb {
@@ -104,5 +104,8 @@ div.tooltip {
   height: 29px;
   border: 0;
   background: url('slider_image.png');
-  cursor: pointer;
+}
+
+.pointer-cursor {
+    cursor: pointer;
 }

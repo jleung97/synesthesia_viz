@@ -447,6 +447,7 @@ slider.style.opacity = "0";
 sliderVal.style.opacity = "0";
 $("#myRange").attr("disabled", "disabled");
 
+
 function toggleView(view) {
     if (view != curr_view) {
         resetViz();
@@ -464,13 +465,19 @@ function toggleView(view) {
         if (view == "color") {
             desc.innerText = "Explore by color frequency!";
             $("#myRange").attr("disabled", "disabled");
+            $('#myRange').removeClass('pointer-cursor');
+
 
         } else if (view == "indiv") {
             desc.innerText = "Explore by individuals' grapheme-color associations!";
             $("#myRange").removeAttr("disabled");
+            $('#myRange').addClass('pointer-cursor');
+
         } else if (view == "env") {
             desc.innerText = "Explore by environmental factors!";
             $("#myRange").attr("disabled", "disabled");
+            $('#myRange').removeClass('pointer-cursor');
+
         }
 
         if (view == "indiv") {
@@ -485,8 +492,6 @@ function toggleView(view) {
         var svg_container = document.getElementById("unsorted");
 
         $('#toys').addClass('shrink');
-        // slider.style.display = "none";
-        // sliderVal.style.display = "none";
 
         if (view == 'env') {
             $('#toys').removeClass('shrink')
@@ -721,6 +726,7 @@ var toyImages = {
     "crayons":"off"
 };
 
+toys.on("mouseout", function(d) { toyDescription.text("Pick an item!"); });
 
 
 // Update the current slider value (each time you drag the slider handle)
