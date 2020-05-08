@@ -3,20 +3,14 @@
 
 <head>
     <title> Visualizing Synesthesia </title>
-    <link rel="shortcut icon" type="image/png" href="favicon.ico" />
+    <link rel="shortcut icon" type="image/png" href="media/favicon.ico" />
 </head>
 <div id="headerDiv" align="center">
     <h1>Visualizing Grapheme-Color Synesthesia</h1>
-    <h5 id="desc">Some people can see colors in words or in music due to a condition called synesthesia. There are at least 80 different types of synesthesia, but we’ll be exploring grapheme-color synesthesia, in which synesthetes associate letters with colors. Below is a graph of colors that 6585 synesthetes see for each letter. This data was taken from the paper <a href="https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0118996&" target="_blank">Prevalence of Learned Grapheme-Color Pairings in a Large Online Sample of Synesthetes.</a> Click the "Let's Explore!" button to see what else we can learn!</h5>
-    <button id="exploreBtn" onclick="onBtnClick()">Let's Explore!</button>
-    <img src="static_initial_graph.png" id="initialGraph" />
-</div>
-
-<div class="row">
-    <div class="column">
-    </div>
-    <div class="column">
-    </div>
+    <h5 id="desc">Some people can see colors in words or in music due to a condition called synesthesia. There are at least 80 different types of synesthesia, but we’ll be exploring grapheme-color synesthesia, in which synesthetes associate letters with colors. Below is a graph of colors that 6585 synesthetes see for each letter. The data for this project was taken from the paper <a href="https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0118996&" target="_blank">Prevalence of Learned Grapheme-Color Pairings in a Large Online Sample of Synesthetes.</a> The below image is a graph provided by the researchers showing the colors that 6,585 synesthetes see for each letter of the alphabet, where each row represents the results from one synesthete. Click the "Let's Explore!" button to see what else we can learn, or <a href="https://drive.google.com/file/d/1tbTxUc6uNz7ORUKVKZYabQTcrjDVj0tF/view">watch a video</a> on the background of this project and visualization!</h5>
+    <button id="exploreBtn" onclick="onExploreBtnClick()">Let's Explore!</button>
+    <br>
+    <img src="media/static_initial_graph.png" id="initialGraph" />
 </div>
 
 <div id="sortedDiv" align="center">
@@ -24,10 +18,10 @@
     <button class="toggleBtn" id="indiv" value="indiv" onclick="toggleView(this.value)">Individual</button>
     <button class="toggleBtn" id="env" value="env" onclick="toggleView(this.value)">Environment</button>
     <div>
-        <h4 id="btnHelp">Explore by color frequency!</h4>
+        <h4 id="header">Explore by color frequency!</h4>
+        <p id="subheader">Here, colors are ranked from most frequent to least, bottom to top. Click on a color see its frequency across the alphabet.</p>
         <svg id='unsorted' width="750" height="450" x="0" y="0" margin-bottom="20px" float="left"></svg>
-        <svg id='toys' class="shrink" width="500" height="450" float="right">
-        </svg>
+        <svg id='toys' class="shrink" width="400" height="450" float="right"></svg>
         <input type="range" min="1" max="6585" value="3294" class="slider" id="myRange">
         <p id="sliderVal"></p>
     </div>
