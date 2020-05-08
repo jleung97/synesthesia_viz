@@ -19,6 +19,18 @@
     margin-bottom: 5px;
 }
 
+#header {
+    margin-bottom: 0px;
+}
+
+#subheader {
+    margin-top: 0px;
+}
+
+#video, #sortedDiv {
+    margin-top: 50px;
+}
+
 button {
     display: inline-block;
     border-radius: 8px;
@@ -29,7 +41,7 @@ button {
     transition: 0.3s;
     cursor: pointer;
     color: black;
-    width: 120px;
+    width: 150px;
 }
 
 .toggleBtn {
@@ -37,7 +49,7 @@ button {
 }
 
 #exploreBtn {
-    display: block;
+    display: inline-block;
 }
 
 button:hover {
@@ -80,7 +92,7 @@ div.tooltip {
 
 .slider {
   -webkit-appearance: none;
-  width: 100%;
+  width: 70%;
   height: 15px;
   border-radius: 20px;
   background: black;
@@ -96,14 +108,14 @@ div.tooltip {
   width: 30px;
   height: 29px;
   border: 0;
-  background: url('slider_image.png');
+  background: url('media/slider_image.png');
 }
 
 .slider::-moz-range-thumb {
   width: 30px;
   height: 29px;
   border: 0;
-  background: url('slider_image.png');
+  background: url('media/slider_image.png');
 }
 
 .pointer-cursor {

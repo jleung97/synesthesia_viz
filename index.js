@@ -181,9 +181,15 @@ function updateRects() {
     });
 }
 
-function onBtnClick() {
+function onExploreBtnClick() {
     $('html, body').animate({
         scrollTop: $('#sortedDiv').offset().top
+    }, 250, 'linear');
+}
+
+function onVideoBtnClick() {
+    $('html, body').animate({
+        scrollTop: $('#video').offset().top
     }, 250, 'linear');
 }
 
@@ -449,6 +455,7 @@ $("#myRange").attr("disabled", "disabled");
 
 
 function toggleView(view) {
+    console.log(view);
     if (view != curr_view) {
         resetViz();
 
@@ -461,20 +468,24 @@ function toggleView(view) {
         btn.style.color = "white";
         btn.style.opacity = "1.0";
 
-        var desc = document.getElementById("btnHelp");
+        var header = document.getElementById("header");
+        var subheader = document.getElementById("subheader");
         if (view == "color") {
-            desc.innerText = "Explore by color frequency!";
+            header.innerText = "Explore by color frequency!";
+            subheader.innerText = "Here, colors are ranked from most frequent to least, bottom to top. Click on a color see its frequency across the alphabet."
             $("#myRange").attr("disabled", "disabled");
             $('#myRange').removeClass('pointer-cursor');
 
 
         } else if (view == "indiv") {
-            desc.innerText = "Explore by individuals' grapheme-color associations!";
+            header.innerText = "Explore by individuals' grapheme-color associations!";
+            subheader.innerText = "Mouse over to view each individual's associations. Click to freeze. Move the slider via mouse or arrow keys."
             $("#myRange").removeAttr("disabled");
             $('#myRange').addClass('pointer-cursor');
 
         } else if (view == "env") {
-            desc.innerText = "Explore by environmental factors!";
+            header.innerText = "Explore by environmental factors!";
+            subheader.innerText = "See how the color associations of childhood experiences compare to what these synesthetes see."
             $("#myRange").attr("disabled", "disabled");
             $('#myRange').removeClass('pointer-cursor');
 
@@ -527,7 +538,7 @@ var toyDescription = toys.append("text")
 
 var magnetsImage = toys.append("image")
     // .attr('xlink:href', 'magnets.jpeg')
-    .attr('xlink:href', 'fisher-price.JPG')
+    .attr('xlink:href', 'media/fisher-price.JPG')
     .attr("x", "100")
     .attr("y", "65")
     .attr("width", "120")
@@ -574,7 +585,7 @@ var magnetsImage = toys.append("image")
 
 
 var chickaBoomImage = toys.append("image")
-    .attr('xlink:href', 'ccbb.jpg')
+    .attr('xlink:href', 'media/ccbb.jpg')
     .attr("x", "280")
     .attr("y", "65")
     .attr("width", "120")
@@ -620,7 +631,7 @@ var chickaBoomImage = toys.append("image")
     });
 
 var bluesCluesImage = toys.append("image")
-    .attr('xlink:href', 'blueclue.jpg')
+    .attr('xlink:href', 'media/blueclue.jpg')
     .attr("x", "100")
     .attr("y", "220")
     .attr("width", "120")
@@ -667,7 +678,7 @@ var bluesCluesImage = toys.append("image")
 
 var crayonsImage = toys.append("image")
     // .attr('xlink:href', 'crayons.jpeg')
-    .attr('xlink:href', 'crayola.jpg')
+    .attr('xlink:href', 'media/crayola.jpg')
     .attr("x", "280")
     .attr("y", "220")
     .attr("width", "120")
